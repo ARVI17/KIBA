@@ -1,0 +1,44 @@
+# backend/app/models/sms.py
+
+from backend.app.config import db
+from datetime import datetime
+
+class Especialidad(db.Model):
+    __tablename__ = 'especialidades'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Especialidad {self.nombre}>'
+
+class SMS(db.Model):
+    __tablename__ = 'sms'
+    id = db.Column(db.Integer, primary_key=True)
+    celular = db.Column(db.String(20), nullable=False)
+    mensaje = db.Column(db.Text, nullable=False)
+    especialidad_id = db.Column(db.Integer, db.ForeignKey('especialidades.id'))
+    fecha_envio = db.Column(db.DateTime)
+    estado = db.Column(db.String(50))
+    token_confirmacion = db.Column(db.String(50), unique=True)
+    confirmado = db.Column(db.Boolean, default=False)
+
+    especialidad = db.relationship('Especialidad', backref='sms')
+
+    def __repr__(self):
+        return f'<SMS {self.celular}>'
+
+
+class Confirmacion(db.Model):
+    __tablename__ = 'confirmaciones'
+
+    id = db.Column(db.Integer, primary_key=True)
+    cita_id = db.Column(db.Integer, db.ForeignKey('citas.id'), nullable=False)
+    sms_id = db.Column(db.Integer, db.ForeignKey('sms.id'), nullable=False)
+    confirmada_en = db.Column(db.DateTime, default=datetime.utcnow)
+
+    sms = db.relationship('SMS', backref='confirmaciones')
+    cita = db.relationship('Cita', backref='confirmacion')
+
+    def __repr__(self):
+        return f'<Confirmacion ID {self.id}>'
+
