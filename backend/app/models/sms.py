@@ -27,18 +27,3 @@ class SMS(db.Model):
     def __repr__(self):
         return f'<SMS {self.celular}>'
 
-
-class Confirmacion(db.Model):
-    __tablename__ = 'confirmaciones'
-
-    id = db.Column(db.Integer, primary_key=True)
-    cita_id = db.Column(db.Integer, db.ForeignKey('citas.id'), nullable=False)
-    sms_id = db.Column(db.Integer, db.ForeignKey('sms.id'), nullable=False)
-    confirmada_en = db.Column(db.DateTime, default=datetime.utcnow)
-
-    sms = db.relationship('SMS', backref='confirmaciones')
-    cita = db.relationship('Cita', backref='confirmacion')
-
-    def __repr__(self):
-        return f'<Confirmacion ID {self.id}>'
-

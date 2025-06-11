@@ -7,7 +7,7 @@ from backend.app.models.paciente import Paciente
 from backend.app.models.sms import Especialidad
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
-from backend.app.models.sms import Confirmacion
+from backend.app.models.confirmacion import Confirmacion
 
 
 cita_bp = Blueprint('cita', __name__)
