@@ -3,7 +3,8 @@
 import os
 from backend.app.config import create_app, db
 from backend.app.models.user import Usuario, Rol
-from backend.app.models.sms import Especialidad, SMS, Confirmacion
+from backend.app.models.sms import Especialidad, SMS
+from backend.app.models.confirmacion import Confirmacion
 from backend.app.routes.auth import auth_bp
 from backend.app.models.sms_pendiente import SMSPendiente
 from backend.app.routes.specialty import specialty_bp
