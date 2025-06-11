@@ -1,7 +1,8 @@
 # KIBA/manage.py
 from backend.app.main import app
 from backend.app.config import db
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager
 
 
 # Configura Migrate
