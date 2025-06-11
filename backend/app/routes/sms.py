@@ -96,24 +96,24 @@ def importar_sms():
 def dashboard():
     hoy = datetime.now().date()
 
-    enviados_hoy = db.session.execute(
-        "SELECT COUNT(*) FROM sms WHERE DATE(fecha_envio) = %s", (hoy,)
+    enviados_hoy = db.session.query(func.count(SMS.id)).filter(
+        func.date(SMS.fecha_envio) == hoy
     ).scalar()
 
-    entregados = db.session.execute(
-        "SELECT COUNT(*) FROM sms WHERE estado = 'Entregado' AND DATE(fecha_envio) = %s", (hoy,)
+    entregados = db.session.query(func.count(SMS.id)).filter(
+        SMS.estado == 'Entregado', func.date(SMS.fecha_envio) == hoy
     ).scalar()
 
-    fallidos = db.session.execute(
-        "SELECT COUNT(*) FROM sms WHERE estado = 'Fallido' AND DATE(fecha_envio) = %s", (hoy,)
+    fallidos = db.session.query(func.count(SMS.id)).filter(
+        SMS.estado == 'Fallido', func.date(SMS.fecha_envio) == hoy
     ).scalar()
 
     dias = []
     cantidades = []
     for i in range(6, -1, -1):  # Últimos 7 días
         dia = hoy - timedelta(days=i)
-        count = db.session.execute(
-            "SELECT COUNT(*) FROM sms WHERE DATE(fecha_envio) = %s", (dia,)
+        count = db.session.query(func.count(SMS.id)).filter(
+            func.date(SMS.fecha_envio) == dia
         ).scalar()
         dias.append(dia.strftime("%d/%m"))
         cantidades.append(count)
@@ -132,13 +132,16 @@ def dashboard():
 
 @sms_bp.route('/historial', methods=['GET'])
 def historial_sms():
-    rows = db.session.execute("SELECT fecha_envio, celular, mensaje, estado FROM sms ORDER BY fecha_envio DESC").fetchall()
+    mensajes = db.session.query(SMS).order_by(SMS.fecha_envio.desc()).all()
 
-    result = [{
-        "fecha_envio": row[0].strftime("%Y-%m-%d %H:%M") if row[0] else "",
-        "numero": row[1],
-        "mensaje": row[2],
-        "estado": row[3]
-    } for row in rows]
+    result = [
+        {
+            "fecha_envio": m.fecha_envio.strftime("%Y-%m-%d %H:%M") if m.fecha_envio else "",
+            "numero": m.celular,
+            "mensaje": m.mensaje,
+            "estado": m.estado,
+        }
+        for m in mensajes
+    ]
 
     return jsonify(result)
