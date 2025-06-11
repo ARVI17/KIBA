@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
@@ -9,7 +9,7 @@ export default function Reports() {
   const [historial, setHistorial] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/historial')
+    api.get('/historial')
       .then(res => setHistorial(res.data))
       .catch(err => console.error('Error al cargar historial:', err));
   }, []);

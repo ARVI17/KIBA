@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 export default function SendSMS() {
   const [numero, setNumero] = useState('');
@@ -13,7 +13,7 @@ export default function SendSMS() {
     setRespuesta(null);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/enviar-sms', {
+      const res = await api.post('/enviar-sms', {
         numero,
         mensaje
       });

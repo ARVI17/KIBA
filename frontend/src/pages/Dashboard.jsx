@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -23,7 +23,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/dashboard')
+    api.get('/dashboard')
       .then(res => setEstadisticas(res.data))
       .catch(err => console.error('Error cargando dashboard:', err));
   }, []);

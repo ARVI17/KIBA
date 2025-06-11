@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import axios from 'axios';
+import api from '../api';
 
 export default function ImportSMS() {
   const [archivo, setArchivo] = useState(null);
@@ -24,7 +24,7 @@ export default function ImportSMS() {
 
   const enviarSMSMasivos = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/importar-sms', {
+      const response = await api.post('/importar-sms', {
         mensajes: datos,
       });
 
