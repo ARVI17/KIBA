@@ -1,5 +1,6 @@
 # backend/app/utils/token_manager.py
 
+import os
 import jwt
 import datetime
 from flask import request, jsonify
@@ -7,7 +8,7 @@ from backend.app.config import db
 from backend.app.models.user import Usuario
 
 # Clave secreta para firmar el Token JWT
-SECRET_KEY = 'clave-super-secreta-kiba'  # (más adelante podemos moverla a .env para producción)
+SECRET_KEY = os.environ.get('SECRET_KEY', 'clave-super-secreta-kiba')
 
 # Función para generar el token
 def generar_token(usuario):
