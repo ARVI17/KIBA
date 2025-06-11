@@ -1,24 +1,26 @@
 // frontend/src/pages/Login.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
+import { useAuth } from '../AuthContext';
 
 export default function Login() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await api.post('/login', {
         correo,
         contrasena
       });
 
-      if (response.data.success) {
-        localStorage.setItem('usuario', JSON.stringify(response.data));
+      if (response.data.token) {
+        login(response.data.token, { correo, rol: response.data.rol });
         navigate('/dashboard');
       }
     } catch (err) {
