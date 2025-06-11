@@ -2,6 +2,7 @@
 
 import jwt
 import datetime
+from functools import wraps
 from flask import request, jsonify
 from backend.app.config import db
 from backend.app.models.user import Usuario
@@ -22,6 +23,7 @@ def generar_token(usuario):
 
 # Decorador para proteger rutas
 def token_requerido(f):
+    @wraps(f)
     def decorador(*args, **kwargs):
         token = None
 
@@ -44,5 +46,4 @@ def token_requerido(f):
 
         return f(*args, **kwargs)
 
-    decorador.__name__ = f.__name__
     return decorador
