@@ -10,15 +10,17 @@ from backend.app.routes.paciente import paciente_bp
 from backend.app.routes.cita import cita_bp
 from flask_migrate import Migrate
 from backend.app.routes.confirmacion import confirmacion_bp
+from backend.app.routes.sms import sms_bp
 
 
 app = create_app()
-app.register_blueprint(auth_bp)
-app.register_blueprint(specialty_bp)
-app.register_blueprint(paciente_bp)
-app.register_blueprint(cita_bp)
+app.register_blueprint(auth_bp, url_prefix='/api')
+app.register_blueprint(specialty_bp, url_prefix='/api')
+app.register_blueprint(paciente_bp, url_prefix='/api')
+app.register_blueprint(cita_bp, url_prefix='/api')
+app.register_blueprint(sms_bp, url_prefix='/api')
 migrate = Migrate(app, db)
-app.register_blueprint(confirmacion_bp)
+app.register_blueprint(confirmacion_bp, url_prefix='/api')
 
 
 @app.route('/')
