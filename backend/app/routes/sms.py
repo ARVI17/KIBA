@@ -7,7 +7,8 @@ import os
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from backend.app.config import db
-from backend.app.models.sms import Especialidad, SMS, Confirmacion
+from backend.app.models.sms import Especialidad, SMS
+from backend.app.models.confirmacion import Confirmacion
 from backend.app.models.user import Usuario  # Si deseas asociar con usuario
 
 sms_bp = Blueprint('sms', __name__)
