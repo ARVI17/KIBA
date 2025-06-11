@@ -42,15 +42,14 @@ def obtener_confirmaciones():
             "sms_id": sms.id,
             "mensaje_sms": sms.mensaje,
             "estado_sms": sms.estado,
-            "numero_enviado": sms.numero,
+            "numero_enviado": sms.celular,
             "fecha_sms": sms.fecha_envio.strftime('%Y-%m-%d %H:%M:%S') if sms.fecha_envio else None,
             "cita_id": cita.id,
             "fecha_cita": cita.fecha_hora.strftime('%Y-%m-%d %H:%M'),
             "paciente": {
                 "id": paciente.id,
-                "nombre": paciente.nombres,
-                "apellidos": paciente.apellidos,
-                "documento": paciente.documento
+                "nombre": paciente.nombre,
+                "celular": paciente.celular
             },
             "especialidad": especialidad.nombre
         })
