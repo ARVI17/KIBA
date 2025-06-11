@@ -19,9 +19,9 @@ sms_bp = Blueprint('sms', __name__)
 def obtener_headers():
     return {
         "Content-Type": "application/json",
-        "Account": os.getenv("HABLAME_ACCOUNT", "10011703"),
-        "ApiKey": os.getenv("HABLAME_APIKEY", "Tp0EeAGxwUSpe7V5lWJTANldwNnnrK"),
-        "Token": os.getenv("HABLAME_TOKEN", "932e1c975331854f7ead1bd54ded2969")
+        "Account": os.getenv("HABLAME_ACCOUNT"),
+        "ApiKey": os.getenv("HABLAME_APIKEY"),
+        "Token": os.getenv("HABLAME_TOKEN")
     }
 
 # ========================

@@ -11,8 +11,8 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # ✅ Usa la conexión real a XAMPP
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/kiba'
+    # Lee la cadena de conexión desde la variable de entorno DATABASE_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave-super-secreta-kiba')
 
