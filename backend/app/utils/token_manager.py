@@ -3,12 +3,10 @@
 import jwt
 import datetime
 from functools import wraps
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from backend.app.config import db
 from backend.app.models.user import Usuario
 
-# Clave secreta para firmar el Token JWT
-SECRET_KEY = 'clave-super-secreta-kiba'  # (más adelante podemos moverla a .env para producción)
 
 # Función para generar el token
 def generar_token(usuario):
@@ -18,7 +16,8 @@ def generar_token(usuario):
         'rol': usuario.rol.nombre,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=12)  # Válido por 12 horas
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    secret = current_app.config['SECRET_KEY']
+    token = jwt.encode(payload, secret, algorithm='HS256')
     return token
 
 # Decorador para proteger rutas
@@ -34,7 +33,8 @@ def token_requerido(f):
             return jsonify({'error': 'Token de acceso requerido.'}), 401
 
         try:
-            datos = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            secret = current_app.config['SECRET_KEY']
+            datos = jwt.decode(token, secret, algorithms=['HS256'])
             usuario = Usuario.query.get(datos['id'])
             if not usuario:
                 return jsonify({'error': 'Usuario no válido.'}), 401

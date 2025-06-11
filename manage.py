@@ -1,4 +1,9 @@
 # KIBA/manage.py
+import os
+
+# Ensure a SECRET_KEY exists for the application
+os.environ.setdefault('SECRET_KEY', 'kiba-insecure-secret')
+
 from backend.app.main import app
 from backend.app.config import db
 from backend.app.models.user import Usuario, Rol

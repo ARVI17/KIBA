@@ -1,5 +1,6 @@
 # backend/app/main.py
 
+import os
 from backend.app.config import create_app, db
 from backend.app.models.user import Usuario, Rol
 from backend.app.models.sms import Especialidad, SMS, Confirmacion
@@ -12,6 +13,9 @@ from flask_migrate import Migrate
 from backend.app.routes.confirmacion import confirmacion_bp
 from backend.app.routes.sms import sms_bp
 
+
+# Ensure SECRET_KEY exists when running the development server directly
+os.environ.setdefault('SECRET_KEY', 'kiba-insecure-secret')
 
 app = create_app()
 app.register_blueprint(auth_bp, url_prefix='/api')
