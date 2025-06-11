@@ -14,7 +14,8 @@ def create_app():
     # Lee la cadena de conexión desde la variable de entorno DATABASE_URL
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave-super-secreta-kiba')
+    # SECRET_KEY is used to sign session and JWT tokens
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'kiba-insecure-secret')
 
     db.init_app(app)
 
