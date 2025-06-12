@@ -4,7 +4,6 @@ import jwt
 import datetime
 from functools import wraps
 from flask import request, jsonify, current_app
-from backend.app.config import db
 from backend.app.models.user import Usuario
 
 
