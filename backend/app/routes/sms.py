@@ -10,6 +10,7 @@ from backend.app.config import db
 from backend.app.models.sms import Especialidad, SMS
 from backend.app.models.confirmacion import Confirmacion
 from backend.app.models.user import Usuario  # Si deseas asociar con usuario
+from backend.app.utils.token_manager import token_requerido
 
 sms_bp = Blueprint('sms', __name__)
 
@@ -30,6 +31,7 @@ def obtener_headers():
 # ========================
 
 @sms_bp.route('/enviar-sms', methods=['POST'])
+@token_requerido
 def enviar_sms():
     data = request.get_json()
     numero = data.get('numero')
@@ -64,6 +66,7 @@ def enviar_sms():
 # ========================
 
 @sms_bp.route('/importar-sms', methods=['POST'])
+@token_requerido
 def importar_sms():
     data = request.get_json()
     mensajes = data.get('mensajes')
@@ -94,6 +97,7 @@ def importar_sms():
 # ========================
 
 @sms_bp.route('/dashboard', methods=['GET'])
+@token_requerido
 def dashboard():
     hoy = datetime.now().date()
 
@@ -132,6 +136,7 @@ def dashboard():
 # ========================
 
 @sms_bp.route('/historial', methods=['GET'])
+@token_requerido
 def historial_sms():
     mensajes = db.session.query(SMS).order_by(SMS.fecha_envio.desc()).all()
 
