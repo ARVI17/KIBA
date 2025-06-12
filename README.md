@@ -4,7 +4,7 @@
 
 The backend relies on several environment variables:
 
-- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database.
+- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database. If not set, the backend uses a local SQLite file `sqlite:///kiba.db`.
 - `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
 - `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
 - `HABLAME_TOKEN` &ndash; authentication token for the Hablame SMS API.
