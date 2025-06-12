@@ -12,6 +12,23 @@ The backend relies on several environment variables:
 
 Make sure these variables are defined before running the application.
 
+## Backend Development
+
+Install Python dependencies for the backend:
+
+```bash
+pip install -r requirements.txt
+```
+
+Set the required environment variables (`DATABASE_URL`, `SECRET_KEY`, etc.) and
+start the development server:
+
+```bash
+python manage.py runserver
+```
+
+The API will be available at `http://localhost:5000/` by default.
+
 ## Frontend Development
 
 The `frontend/` directory contains a Vite + React project.
