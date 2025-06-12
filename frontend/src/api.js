@@ -7,7 +7,8 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    // Send the raw JWT token without the usual "Bearer" prefix.
+    config.headers.Authorization = token;
   }
   return config;
 });
