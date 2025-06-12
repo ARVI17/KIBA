@@ -6,11 +6,13 @@ from backend.app.models.sms import SMS
 from backend.app.models.cita import Cita
 from backend.app.models.paciente import Paciente
 from backend.app.models.sms import Especialidad
+from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
 
 confirmacion_bp = Blueprint('confirmacion', __name__)
 
 @confirmacion_bp.route('/confirmaciones', methods=['GET'])
+@token_requerido
 def obtener_confirmaciones():
     fecha_filtro = request.args.get('fecha')  # Formato esperado: YYYY-MM-DD
     paciente_id = request.args.get('paciente_id')
