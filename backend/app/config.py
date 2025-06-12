@@ -11,8 +11,10 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # Lee la cadena de conexión desde la variable de entorno DATABASE_URL
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    # Use DATABASE_URL if defined, otherwise fall back to a local SQLite file
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'DATABASE_URL', 'sqlite:///kiba.db'
+    )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # SECRET_KEY is used to sign session and JWT tokens
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'kiba-insecure-secret')
