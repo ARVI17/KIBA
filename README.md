@@ -14,7 +14,8 @@ Make sure these variables are defined before running the application.
 
 ## Backend Development
 
-Install Python dependencies for the backend:
+Install the Python dependencies used by the backend (Flask, Flask-SQLAlchemy,
+Flask-Migrate, etc.) using `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
