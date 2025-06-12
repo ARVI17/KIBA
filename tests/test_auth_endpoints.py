@@ -41,3 +41,15 @@ def test_login_unknown_user(client):
         json={"correo": "nobody@example.com", "contrasena": "whatever"},
     )
     assert resp.status_code == 404
+
+
+def test_authenticated_profile(client, app):
+    with app.app_context():
+        seed_user()
+    login_resp = client.post(
+        "/api/login",
+        json={"correo": "user@example.com", "contrasena": "secret123"},
+    )
+    token = login_resp.get_json()["token"]
+    resp = client.get("/api/perfil", headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200

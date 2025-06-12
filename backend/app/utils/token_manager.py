@@ -28,6 +28,8 @@ def token_requerido(f):
 
         if 'Authorization' in request.headers:
             token = request.headers['Authorization']
+            if token.startswith('Bearer '):
+                token = token[len('Bearer '):]
 
         if not token:
             return jsonify({'error': 'Token de acceso requerido.'}), 401
