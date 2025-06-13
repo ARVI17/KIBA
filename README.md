@@ -6,13 +6,17 @@ The backend relies on several environment variables:
 
 - `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database.
 - `JWT_SECRET` &ndash; secret used to sign JWTs and Flask sessions.
-- `API_HABLAME_KEY` &ndash; API key for the Hablame SMS API (real or dummy).
+- `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
+- `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
+- `HABLAME_TOKEN` &ndash; token for the Hablame SMS API.
 - `FRONTEND_URL` &ndash; URL where the React frontend is served.
-- `BACKEND_URL` &ndash; base URL for the Flask API.
+- `API_HABLAME_KEY` &ndash; legacy key, currently unused.
+- `BACKEND_URL` &ndash; unused base URL variable.
 
 A `.env.example` file contains these variables with placeholder values. Copy it to
-`.env` and edit it with your credentials. Make sure the variables are loaded
-before running the application.
+`.env` and edit it with your credentials. Ensure the variables are loaded
+before running the application. When deploying on **Render**, add the same
+variables in the dashboard so that the container starts correctly.
 
 ## Backend Development
 
