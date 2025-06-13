@@ -13,6 +13,7 @@ from backend.app.routes.confirmacion import confirmacion_bp
 @pytest.fixture
 def app():
     os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+    os.environ["JWT_SECRET"] = "testsecret"
     app = create_app()
     app.register_blueprint(sms_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")
