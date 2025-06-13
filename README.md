@@ -10,7 +10,9 @@ The backend relies on several environment variables:
 - `HABLAME_TOKEN` &ndash; authentication token for the Hablame SMS API.
 - `SECRET_KEY` &ndash; secret used to sign JWTs and Flask sessions. Defaults to `kiba-insecure-secret`.
 
-Make sure these variables are defined before running the application.
+A `.env.example` file contains these variables with placeholder values. Copy it to
+`.env` and edit it with your credentials. Make sure the variables are loaded
+before running the application.
 
 ## Backend Development
 
@@ -21,8 +23,7 @@ Flask-Migrate, etc.) using `requirements.txt`:
 pip install -r requirements.txt
 ```
 
-Set the required environment variables (`DATABASE_URL`, `SECRET_KEY`, etc.) and
-start the development server:
+Ensure the variables from your `.env` file are loaded and start the development server:
 
 ```bash
 python manage.py runserver
