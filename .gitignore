@@ -1,0 +1,18 @@
+# Ignore ZIP archives
+*.zip
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Node build artifacts and dependencies
+node_modules/
+frontend/dist/
+
+# Build directories
+build/
+dist/
+
+# Ignore environment files
+.env
