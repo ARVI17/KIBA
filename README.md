@@ -49,3 +49,27 @@ npm run build
 ```
 
 The compiled files will appear in `frontend/dist`.
+
+## Docker Usage
+
+A `Dockerfile` is provided for the backend. Build the image with:
+
+```bash
+docker build -t kiba-backend .
+```
+
+Run the container exposing port `5000`:
+
+```bash
+docker run -p 5000:5000 kiba-backend
+```
+
+The repository also includes a `docker-compose.yml` to run both the backend and
+the React frontend:
+
+```bash
+docker-compose up --build
+```
+
+The API will be available at `http://localhost:5000/` and the frontend at
+`http://localhost:5173/`.
