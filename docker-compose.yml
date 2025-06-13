@@ -1,15 +1,42 @@
 version: '3.8'
 services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: kiba
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - kiba
+
   backend:
     build: .
+    depends_on:
+      - db
+    env_file: .env
     ports:
       - "5000:5000"
-    environment:
-      - DATABASE_URL=sqlite:///database/app.db
-      - SECRET_KEY=kiba-insecure-secret
+    restart: unless-stopped
+    networks:
+      - kiba
+
   frontend:
     build: ./frontend
-    working_dir: /app
-    command: npm run dev -- --host
+    command: npm run dev -- --host --port 3000
+    env_file: .env
     ports:
-      - "5173:5173"
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - kiba
+    # This service is optional if the frontend is deployed separately (e.g. Vercel)
+
+volumes:
+  pgdata:
+
+networks:
+  kiba:
+    driver: bridge

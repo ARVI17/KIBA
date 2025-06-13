@@ -4,11 +4,11 @@
 
 The backend relies on several environment variables:
 
-- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database. If not set, the backend uses a local SQLite file `sqlite:///kiba.db`.
-- `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
-- `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
-- `HABLAME_TOKEN` &ndash; authentication token for the Hablame SMS API.
-- `SECRET_KEY` &ndash; secret used to sign JWTs and Flask sessions. Defaults to `kiba-insecure-secret`.
+- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database.
+- `JWT_SECRET` &ndash; secret used to sign JWTs and Flask sessions.
+- `API_HABLAME_KEY` &ndash; API key for the Hablame SMS API (real or dummy).
+- `FRONTEND_URL` &ndash; URL where the React frontend is served.
+- `BACKEND_URL` &ndash; base URL for the Flask API.
 
 A `.env.example` file contains these variables with placeholder values. Copy it to
 `.env` and edit it with your credentials. Make sure the variables are loaded
@@ -51,6 +51,9 @@ npm run build
 
 The compiled files will appear in `frontend/dist`.
 
+When deploying the React application to Vercel, set `VITE_API_URL` in the
+project settings so that the frontend knows where to reach the backend API.
+
 ## Docker Usage
 
 A `Dockerfile` is provided for the backend. Build the image with:
@@ -73,4 +76,4 @@ docker-compose up --build
 ```
 
 The API will be available at `http://localhost:5000/` and the frontend at
-`http://localhost:5173/`.
+`http://localhost:3000/`.
