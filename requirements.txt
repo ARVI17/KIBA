@@ -7,3 +7,4 @@ PyJWT
 bcrypt
 requests
 pytest
+python-dotenv
