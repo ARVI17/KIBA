@@ -1,8 +1,8 @@
 # KIBA/manage.py
 import os
+from dotenv import load_dotenv
 
-# Ensure a SECRET_KEY exists for the application
-os.environ.setdefault('SECRET_KEY', 'kiba-insecure-secret')
+load_dotenv()
 
 from backend.app.main import app
 from backend.app.config import db
