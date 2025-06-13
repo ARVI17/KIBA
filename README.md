@@ -49,3 +49,16 @@ npm run build
 ```
 
 The compiled files will appear in `frontend/dist`.
+
+## Fixing Imports
+
+The repository includes a helper script `fix_imports.py` for updating import
+statements that reference the old `models` package location. Run it from the
+project root whenever you move backend modules:
+
+```bash
+python fix_imports.py
+```
+
+The script replaces occurrences of `from models.` with
+`from backend.app.models.` in the main backend files.
