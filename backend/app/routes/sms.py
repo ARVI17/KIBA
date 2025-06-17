@@ -1,5 +1,6 @@
 # backend/app/routes/sms.py
 
+import logging
 from flask import Blueprint, request, jsonify
 import requests
 import json
@@ -12,6 +13,7 @@ from backend.app.models.confirmacion import Confirmacion
 from backend.app.models.user import Usuario  # Si deseas asociar con usuario
 from backend.app.utils.token_manager import token_requerido
 
+logger = logging.getLogger(__name__)
 sms_bp = Blueprint('sms', __name__)
 
 # ========================

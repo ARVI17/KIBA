@@ -1,11 +1,13 @@
 # backend/app/routes/specialty.py
 
+import logging
 from flask import Blueprint, request, jsonify
 from backend.app.config import db
 from backend.app.models.sms import Especialidad
 from backend.app.utils.token_manager import token_requerido  
 
 
+logger = logging.getLogger(__name__)
 specialty_bp = Blueprint('specialty', __name__)
 
 @specialty_bp.route('/especialidades', methods=['POST'])

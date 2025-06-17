@@ -1,5 +1,6 @@
 # backend/app/routes/cita.py
 
+import logging
 from flask import Blueprint, request, jsonify
 from backend.app.config import db
 from backend.app.models.cita import Cita
@@ -10,6 +11,7 @@ from datetime import datetime
 from backend.app.models.confirmacion import Confirmacion
 
 
+logger = logging.getLogger(__name__)
 cita_bp = Blueprint('cita', __name__)
 
 @cita_bp.route('/citas', methods=['POST'])

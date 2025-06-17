@@ -1,14 +1,16 @@
 # backend/app/main.py
 
+import logging
 import os
 from dotenv import load_dotenv
-from flask_cors import CORS
 from backend.app.config import create_app, db
 from backend.app.models.user import Usuario, Rol
 from backend.app.utils.default_user import seed_default_admin
 from backend.app.models.sms import Especialidad, SMS
 from backend.app.models.confirmacion import Confirmacion
-from backend.app.routes.auth import auth_bp
+from backend.app.routes.auth import auth
+
+logger = logging.getLogger(__name__)
 from backend.app.models.sms_pendiente import SMSPendiente
 from backend.app.routes.specialty import specialty_bp
 from backend.app.routes.paciente import paciente_bp
@@ -19,9 +21,10 @@ from backend.app.routes.sms import sms_bp
 
 load_dotenv()
 
+logger.info("Arrancando Kiba")
+
 app = create_app()
-CORS(app, origins=os.getenv('FRONTEND_URL'))
-app.register_blueprint(auth_bp, url_prefix='/api')
+app.register_blueprint(auth, url_prefix='/api')
 app.register_blueprint(specialty_bp, url_prefix='/api')
 app.register_blueprint(paciente_bp, url_prefix='/api')
 app.register_blueprint(cita_bp, url_prefix='/api')
