@@ -17,7 +17,7 @@ class Cita(db.Model):
     especialidad = db.relationship('Especialidad', backref='citas')
     
     # Relación con confirmaciones
-    confirmaciones = db.relationship('Confirmacion', backref='cita', cascade="all, delete-orphan")
+    confirmaciones = db.relationship('Confirmacion', back_populates='cita', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'<Cita {self.id} - Paciente {self.paciente_id} - {self.fecha_hora}>'
