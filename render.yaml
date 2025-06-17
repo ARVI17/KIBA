@@ -1,0 +1,9 @@
+services:
+  - name: kiba-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend.app.main:app
+  - name: kiba-frontend
+    env: node
+    buildCommand: npm install && npm audit fix --force && npm run build
+    publish: frontend/dist
