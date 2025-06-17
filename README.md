@@ -14,6 +14,10 @@ The backend relies on several environment variables:
 - `FRONTEND_URL` &ndash; URL where the React frontend is served.
 - `API_HABLAME_KEY` &ndash; legacy key, currently unused.
 - `BACKEND_URL` &ndash; unused base URL variable.
+- `DEFAULT_ADMIN_EMAIL` &ndash; email for the initial admin user created on startup.
+- `DEFAULT_ADMIN_PASSWORD` &ndash; password for that user.
+
+If these credentials are not provided, no admin account will be seeded automatically.
 
 A `.env.example` file contains these variables with placeholder values. Copy it to
 `.env` and edit it with your credentials. Ensure the variables are loaded
