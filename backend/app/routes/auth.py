@@ -6,6 +6,27 @@ from backend.app.utils.token_manager import generar_token, token_requerido
 
 auth_bp = Blueprint('auth', __name__)
 
+
+@auth_bp.route('/auth/login', methods=['POST'])
+def login_v2():
+    """Login endpoint using email and password with detailed errors."""
+    datos = request.get_json() or {}
+    email = datos.get('email')
+    password = datos.get('password')
+
+    if not email or not password:
+        return jsonify({'success': False, 'error': 'Faltan credenciales'}), 400
+
+    usuario = Usuario.query.filter_by(correo=email).first()
+    if not usuario:
+        return jsonify({'success': False, 'error': 'Email no registrado'}), 404
+
+    if not usuario.verificar_contrasena(password):
+        return jsonify({'success': False, 'error': 'Contraseña incorrecta'}), 401
+
+    token = generar_token(usuario)
+    return jsonify({'success': True, 'token': token})
+
 @auth_bp.route('/login', methods=['POST'])
 def login():
     datos = request.get_json()

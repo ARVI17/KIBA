@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from backend.app.config import create_app, db
 from backend.app.models.user import Usuario, Rol
+from backend.app.utils.default_user import seed_default_admin
 from backend.app.models.sms import Especialidad, SMS
 from backend.app.models.confirmacion import Confirmacion
 from backend.app.routes.auth import auth_bp
@@ -27,6 +28,9 @@ app.register_blueprint(cita_bp, url_prefix='/api')
 app.register_blueprint(sms_bp, url_prefix='/api')
 migrate = Migrate(app, db)
 app.register_blueprint(confirmacion_bp, url_prefix='/api')
+
+with app.app_context():
+    seed_default_admin()
 
 
 @app.route('/')
