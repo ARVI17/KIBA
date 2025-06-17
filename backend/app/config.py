@@ -9,7 +9,10 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     # Database connection string
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    db_uri = os.environ["DATABASE_URL"]
+    if db_uri.startswith("postgresql://"):
+        db_uri = db_uri.replace("postgresql://", "postgresql+pg8000://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # Secret used to sign JWTs and sessions
     app.config['SECRET_KEY'] = os.environ['JWT_SECRET']
