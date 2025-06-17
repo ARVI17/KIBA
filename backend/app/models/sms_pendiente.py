@@ -1,6 +1,9 @@
 # backend/app/models/sms_pendiente.py
 
+import logging
 from backend.app.config import db
+
+logger = logging.getLogger(__name__)
 
 class SMSPendiente(db.Model):
     __tablename__ = 'sms_pendientes'

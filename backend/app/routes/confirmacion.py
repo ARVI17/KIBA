@@ -1,4 +1,5 @@
 # backend/app/routes/confirmacion.py
+import logging
 from flask import Blueprint, jsonify, request
 from backend.app.models.confirmacion import Confirmacion
 from backend.app.config import db
@@ -9,6 +10,7 @@ from backend.app.models.sms import Especialidad
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
 
+logger = logging.getLogger(__name__)
 confirmacion_bp = Blueprint('confirmacion', __name__)
 
 @confirmacion_bp.route('/confirmaciones', methods=['GET'])

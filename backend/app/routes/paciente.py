@@ -1,5 +1,6 @@
 # backend/app/routes/paciente.py
 
+import logging
 from flask import Blueprint, request, jsonify
 from backend.app.config import db
 from backend.app.models.paciente import Paciente
@@ -8,6 +9,7 @@ from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
 
 
+logger = logging.getLogger(__name__)
 paciente_bp = Blueprint('paciente', __name__)
 
 @paciente_bp.route('/pacientes', methods=['POST'])

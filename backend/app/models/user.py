@@ -1,7 +1,10 @@
 # backend/app/models/user.py
 
+import logging
 import bcrypt
 from backend.app.config import db
+
+logger = logging.getLogger(__name__)
 
 class Rol(db.Model):
     __tablename__ = 'roles'

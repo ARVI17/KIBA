@@ -1,10 +1,13 @@
 # backend/app/utils/token_manager.py
 
+import logging
 import jwt
 import datetime
 from functools import wraps
 from flask import request, jsonify, current_app
 from backend.app.models.user import Usuario
+
+logger = logging.getLogger(__name__)
 
 
 # Función para generar el token

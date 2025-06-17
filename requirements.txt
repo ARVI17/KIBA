@@ -12,3 +12,5 @@ mypy>=1.16.1
 bandit>=1.8.5
 pytest
 pg8000==1.31.2
+sentry-sdk>=1.39.1
+prometheus-client>=0.20.0

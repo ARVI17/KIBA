@@ -1,7 +1,10 @@
 # backend/app/models/paciente.py
 
+import logging
 from backend.app.config import db
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 class Paciente(db.Model):
     __tablename__ = 'pacientes'
