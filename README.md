@@ -1,51 +1,33 @@
 # KIBA
 
-## Environment Variables
+Aplicación de gestión de citas y envío de SMS basada en **Flask** y **React**.
+Incluye autenticación por JWT y base de datos PostgreSQL.
 
-The backend relies on several environment variables:
+## Variables de entorno
 
-- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database. Use a
-  `postgres://` or `postgresql://` URL. Either style will be converted internally to
-  `postgresql+pg8000://` for SQLAlchemy.
-- `JWT_SECRET` &ndash; secret used to sign JWTs and Flask sessions.
-- `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
-- `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
-- `HABLAME_TOKEN` &ndash; token for the Hablame SMS API.
-- `FRONTEND_URL` &ndash; URL where the React frontend is served.
-- `API_HABLAME_KEY` &ndash; legacy key, currently unused.
-- `BACKEND_URL` &ndash; unused base URL variable.
-- `DEFAULT_ADMIN_EMAIL` &ndash; email for the initial admin user created on startup.
-- `DEFAULT_ADMIN_PASSWORD` &ndash; password for that user.
+Configure un archivo `.env` a partir de `.env.example` con al menos:
 
-If these credentials are not provided, no admin account will be seeded automatically.
+- `DATABASE_URL` – cadena de conexión para SQLAlchemy.
+- `JWT_SECRET` – clave secreta para firmar tokens.
+- `HABLAME_ACCOUNT`, `HABLAME_APIKEY`, `HABLAME_TOKEN` – credenciales del servicio SMS.
+- `FRONTEND_URL` – origen permitido para CORS.
+- `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
+- `SENTRY_DSN` – opcional, para reportar errores.
 
-A `.env.example` file contains these variables with placeholder values. Copy it to
-`.env` and edit it with your credentials. Ensure the variables are loaded
-before running the application. When deploying on **Render**, add the same
-variables in the dashboard so that the container starts correctly.
+## Desarrollo del backend
 
-## Backend Development
-
-Install the Python dependencies used by the backend (Flask, Flask-SQLAlchemy,
-Flask-Migrate, etc.) using `requirements.txt`:
+Instale las dependencias y ejecute el servidor:
 
 ```bash
 pip install -r requirements.txt
-```
-
-Ensure the variables from your `.env` file are loaded and start the development server:
-
-```bash
 python manage.py runserver
 ```
 
-The API will be available at `http://localhost:5000/` by default.
+La API estará disponible en `http://localhost:5000/`.
 
-## Frontend Development
+## Desarrollo del frontend
 
-The `frontend/` directory contains a Vite + React project.
-
-Install dependencies and start the development server:
+Dentro de `frontend/` se encuentra el proyecto Vite + React:
 
 ```bash
 cd frontend
@@ -53,50 +35,29 @@ npm install
 npm run dev
 ```
 
-To build the production assets:
+Para generar los artefactos de producción:
 
 ```bash
 npm run build
 ```
 
-The compiled files will appear in `frontend/dist`.
+## Docker
 
-When deploying the React application to Vercel, set `VITE_API_URL` in the
-project settings so that the frontend knows where to reach the backend API.
-
-## Docker Usage
-
-A `Dockerfile` is provided for the backend. Build the image with:
-
-```bash
-docker build -t kiba-backend .
-```
-
-Run the container exposing port `5000`:
-
-```bash
-docker run -p 5000:5000 kiba-backend
-```
-
-The repository also includes a `docker-compose.yml` to run both the backend and
-the React frontend:
+Puede construir la imagen y levantar todo el entorno con:
 
 ```bash
 docker-compose up --build
 ```
 
-The API will be available at `http://localhost:5000/` and the frontend at
-`http://localhost:3000/`.
+## Despliegue en Render
 
-## Deploying on Render
-
-Configure the service on [Render](https://render.com) with the following settings:
+Ejemplo de configuración para el servicio:
 
 ```json
 {
   "buildCommand": "pip install -r requirements.txt && cd frontend && npm install && npm run build",
-  "startCommand": "gunicorn backend.app.main:app"
+  "startCommand": "gunicorn backend.app.main:app --bind 0.0.0.0:$PORT"
 }
 ```
 
-Add the environment variables from `.env.sample` in the Render dashboard so that the container boots correctly.
+Asegúrese de definir en el panel de Render todas las variables de entorno necesarias.
