@@ -81,3 +81,16 @@ docker-compose up --build
 
 The API will be available at `http://localhost:5000/` and the frontend at
 `http://localhost:3000/`.
+
+## Deploying on Render
+
+Configure the service on [Render](https://render.com) with the following settings:
+
+```json
+{
+  "buildCommand": "pip install -r requirements.txt && cd frontend && npm install && npm run build",
+  "startCommand": "gunicorn backend.app.main:app"
+}
+```
+
+Add the environment variables from `.env.sample` in the Render dashboard so that the container boots correctly.
