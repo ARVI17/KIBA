@@ -4,7 +4,9 @@
 
 The backend relies on several environment variables:
 
-- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database.
+- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database. Use a
+  `postgres://` or `postgresql://` URL. Either style will be converted internally to
+  `postgresql+pg8000://` for SQLAlchemy.
 - `JWT_SECRET` &ndash; secret used to sign JWTs and Flask sessions.
 - `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
 - `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
