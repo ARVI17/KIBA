@@ -4,7 +4,12 @@
 
 The backend relies on several environment variables:
 
-- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's database.
+- `DATABASE_URL` &ndash; SQLAlchemy connection string for the application's
+  database. Use the standard PostgreSQL format:
+  `postgresql://<USER>:<PASSWORD>@<HOST>:<PORT>/<DB_NAME>`. If you rely on the
+  `pg8000` driver the string must instead start with the
+  `postgresql+pg8000://` prefix. The credentials included here must match the
+  actual database you want the application to connect to.
 - `JWT_SECRET` &ndash; secret used to sign JWTs and Flask sessions.
 - `HABLAME_ACCOUNT` &ndash; account identifier for the Hablame SMS API.
 - `HABLAME_APIKEY` &ndash; API key for the Hablame SMS API.
@@ -93,4 +98,4 @@ Configure the service on [Render](https://render.com) with the following setting
 }
 ```
 
-Add the environment variables from `.env.sample` in the Render dashboard so that the container boots correctly.
+Add the environment variables from `.env.example` in the Render dashboard so that the container boots correctly.
