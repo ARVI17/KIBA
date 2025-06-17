@@ -12,7 +12,7 @@ class Confirmacion(db.Model):
     confirmada_en = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relaciones
-    cita = db.relationship('Cita', backref='confirmaciones')
+    cita = db.relationship('Cita', back_populates='confirmaciones')
     sms = db.relationship('SMS', backref='confirmaciones')
 
     def __repr__(self):
