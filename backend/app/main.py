@@ -9,6 +9,11 @@ from backend.app.utils.default_user import seed_default_admin
 from backend.app.models.sms import Especialidad, SMS
 from backend.app.models.confirmacion import Confirmacion
 from backend.app.routes.auth import auth
+from flask_cors import CORS
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from prometheus_client import make_wsgi_app
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 logger = logging.getLogger(__name__)
 from backend.app.models.sms_pendiente import SMSPendiente
@@ -24,6 +29,20 @@ load_dotenv()
 logger.info("Arrancando Kiba")
 
 app = create_app()
+
+CORS(app)
+sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[FlaskIntegration()])
+app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
+    '/metrics': make_wsgi_app()
+})
+
+try:
+    db.init_app(app)
+    logger.info("Base de datos inicializada correctamente")
+except Exception:
+    logger.exception("Error al inicializar la base de datos")
+    raise
+
 app.register_blueprint(auth, url_prefix='/api')
 app.register_blueprint(specialty_bp, url_prefix='/api')
 app.register_blueprint(paciente_bp, url_prefix='/api')
