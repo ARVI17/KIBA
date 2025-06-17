@@ -10,6 +10,6 @@ pytest
 python-dotenv
 gunicorn==20.1.0
 psycopg2-binary==2.9.6
-pg8000==1.31.9
+pg8000==1.31.2
 mypy==1.5.1
 bandit==1.7.2
