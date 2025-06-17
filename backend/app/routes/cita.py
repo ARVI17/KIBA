@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify
 from backend.app.config import db
 from backend.app.models.cita import Cita
 from backend.app.models.paciente import Paciente
-from backend.app.models.sms import Especialidad
+from backend.app.models.sms import Especialidad, SMS
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
 from backend.app.models.confirmacion import Confirmacion
@@ -69,7 +69,11 @@ def confirmar_cita():
     if not cita:
         return jsonify({'error': 'Cita no encontrada'}), 404
 
-    confirmacion = Confirmacion(cita_id=cita.id)
+    sms = SMS.query.filter_by(celular=celular).order_by(SMS.fecha_envio.desc()).first()
+    if not sms:
+        return jsonify({'error': 'SMS relacionado no encontrado'}), 404
+
+    confirmacion = Confirmacion(cita_id=cita.id, sms_id=sms.id)
     db.session.add(confirmacion)
     db.session.commit()
 
