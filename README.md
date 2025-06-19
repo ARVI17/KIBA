@@ -14,6 +14,7 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 
+El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
 ## Base de datos (PostgreSQL por defecto)
 
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
