@@ -14,6 +14,7 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 
+El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
 ## Base de datos (PostgreSQL por defecto)
 
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
@@ -39,11 +40,12 @@ python manage.py cargar_datos
 
 ## Desarrollo del backend
 
-Instale las dependencias y ejecute el servidor:
+Instale las dependencias, aplique las migraciones y ejecute el servidor:
 
 ```bash
 pip install -r requirements.txt
-python manage.py runserver
+flask --app backend.app.main db upgrade
+flask --app backend.app.main run
 ```
 
 La API estará disponible en `http://localhost:5000/`.
@@ -95,8 +97,7 @@ siguiente (ajusta usuario, contraseña y base según corresponda):
 DATABASE_URL=mysql+pymysql://root:@localhost:3306/kiba
 ```
 
-Al arrancar `mysqld` desde el panel de XAMPP podrás usar `python manage.py
-runserver` normalmente.
+Al arrancar `mysqld` desde el panel de XAMPP podrás usar `flask --app backend.app.main run` normalmente.
 
 ## Despliegue en Render
 
