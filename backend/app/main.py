@@ -15,7 +15,6 @@ from prometheus_client import make_wsgi_app
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from backend.app.models.sms_pendiente import SMSPendiente
 from backend.app.routes.specialty import specialty_bp
 from backend.app.routes.paciente import paciente_bp
 from backend.app.routes.cita import cita_bp

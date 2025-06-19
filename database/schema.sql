@@ -62,14 +62,6 @@ CREATE TABLE confirmaciones (
     FOREIGN KEY (sms_id) REFERENCES sms(id)
 );
 
-CREATE TABLE sms_pendientes (
-    id SERIAL PRIMARY KEY,
-    celular VARCHAR(20) NOT NULL,
-    mensaje TEXT NOT NULL,
-    especialidad VARCHAR(100),
-    fecha_programada TIMESTAMP,
-    estado VARCHAR(20) DEFAULT 'pendiente'
-);
 
 -- Índices
 CREATE INDEX idx_pacientes_especialidad ON pacientes (especialidad_id);
