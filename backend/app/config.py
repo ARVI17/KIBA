@@ -2,18 +2,9 @@
 
 import logging
 import os
-from urllib.parse import urlparse
 
-from dotenv import load_dotenv
-from flask import Flask, jsonify
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import HTTPException
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from prometheus_client import make_wsgi_app
-from sentry_sdk import init as sentry_init
-from sentry_sdk.integrations.flask import FlaskIntegration
+
+from backend.app.error_handlers import register_error_handlers
 
 # Ajuste automático de esquema para pg8000 o psycopg2
 url = os.getenv("DATABASE_URL", "")
@@ -101,14 +92,3 @@ def create_app():
         return {"status": "ok"}, 200
 
     return app
-
-
-def register_error_handlers(app: Flask) -> None:
-    @app.errorhandler(HTTPException)
-    def handle_http_error(e: HTTPException):
-        return jsonify(error=e.description), e.code
-
-    @app.errorhandler(Exception)
-    def handle_exception(e: Exception):
-        logger.error("Unhandled exception", exc_info=True)
-        return jsonify(error="Internal server error"), 500
