@@ -19,7 +19,10 @@ export default function Login() {
     setPasswordError('');
     setGenericError('');
     try {
-      const { data } = await api.post('/login', { email, password });
+      const { data } = await api.post('/login', {
+        correo: email,
+        contrasena: password,
+      });
       if (data.success) {
         login(data.token, { email });
         navigate('/dashboard');
