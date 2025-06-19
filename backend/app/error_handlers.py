@@ -15,5 +15,3 @@ def register_error_handlers(app: Flask) -> None:
         logger.error("Unhandled exception", exc_info=True)
         return jsonify(error="Internal server error"), 500
 
-
-__all__ = ["register_error_handlers"]
