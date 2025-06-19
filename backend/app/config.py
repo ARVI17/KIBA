@@ -3,6 +3,16 @@
 import logging
 import os
 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_cors import CORS
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from prometheus_client import make_wsgi_app
+from sentry_sdk import init as sentry_init
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from backend.app.error_handlers import register_error_handlers
 
