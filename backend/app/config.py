@@ -2,10 +2,9 @@
 # backend/app/config.py
 import logging
 import os
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import HTTPException
-from urllib.parse import urlparse
+
+
+from backend.app.error_handlers import register_error_handlers
 
 # Leer la URL de la base de datos desde .env
 def _build_database_uri():
@@ -97,7 +96,7 @@ def create_app():
 
     @app.route("/")
     def home():
-        return "KIBA Backend funcionando correctamente ✅"
+        return "CitaMatic Backend funcionando correctamente ✅"
 
     @app.route("/health")
     def health():

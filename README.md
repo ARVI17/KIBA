@@ -1,4 +1,4 @@
-# KIBA
+# CitaMatic
 
 Aplicación de gestión de citas y envío de SMS basada en **Flask** y **React**.
 PostgreSQL es la base de datos principal del proyecto e incluye autenticación por JWT.
@@ -21,7 +21,7 @@ Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
 el esquema inicial con:
 
 ```bash
-psql -U user -d kiba -f database/schema.sql
+psql -U user -d citamatic -f database/schema.sql
 ```
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
@@ -82,7 +82,7 @@ En tu archivo `.env` configura `DATABASE_URL` con una cadena similar a la
 siguiente (ajusta usuario, contraseña y base según corresponda):
 
 ```env
-DATABASE_URL=mysql+pymysql://root:@localhost:3306/kiba
+DATABASE_URL=mysql+pymysql://root:@localhost:3306/citamatic
 ```
 
 Al arrancar `mysqld` desde el panel de XAMPP podrás usar `flask --app backend.app.main run` normalmente.
