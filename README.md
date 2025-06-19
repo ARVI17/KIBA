@@ -27,11 +27,12 @@ Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 
 ## Desarrollo del backend
 
-Instale las dependencias y ejecute el servidor:
+Instale las dependencias, aplique las migraciones y ejecute el servidor:
 
 ```bash
 pip install -r requirements.txt
-python manage.py runserver
+flask --app backend.app.main db upgrade
+flask --app backend.app.main run
 ```
 
 La API estará disponible en `http://localhost:5000/`.
@@ -83,8 +84,7 @@ siguiente (ajusta usuario, contraseña y base según corresponda):
 DATABASE_URL=mysql+pymysql://root:@localhost:3306/kiba
 ```
 
-Al arrancar `mysqld` desde el panel de XAMPP podrás usar `python manage.py
-runserver` normalmente.
+Al arrancar `mysqld` desde el panel de XAMPP podrás usar `flask --app backend.app.main run` normalmente.
 
 ## Despliegue en Render
 
