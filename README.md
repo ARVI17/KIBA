@@ -49,6 +49,26 @@ Puede construir la imagen y levantar todo el entorno con:
 docker-compose up --build
 ```
 
+## Uso de MySQL de XAMPP en Windows 10
+
+Si trabajas en Windows 10 con XAMPP puedes utilizar el servicio de MySQL que
+viene incluido. Instala el conector de MySQL para Python antes de ejecutar el
+servidor:
+
+```bash
+pip install PyMySQL
+```
+
+En tu archivo `.env` configura `DATABASE_URL` con una cadena similar a la
+siguiente (ajusta usuario, contraseña y base según corresponda):
+
+```env
+DATABASE_URL=mysql+pymysql://root:@localhost:3306/kiba
+```
+
+Al arrancar `mysqld` desde el panel de XAMPP podrás usar `python manage.py
+runserver` normalmente.
+
 ## Despliegue en Render
 
 Ejemplo de configuración para el servicio:
