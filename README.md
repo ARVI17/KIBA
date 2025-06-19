@@ -14,6 +14,17 @@ Configure un archivo `.env` a partir de `.env.example` con al menos:
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 
+## Base de datos
+
+Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
+el esquema inicial con:
+
+```bash
+psql -U user -d kiba -f database/schema.sql
+```
+
+Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
+
 ## Desarrollo del backend
 
 Instale las dependencias y ejecute el servidor:
