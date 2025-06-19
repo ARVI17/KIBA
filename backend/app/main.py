@@ -23,6 +23,13 @@ from flask_migrate import Migrate
 from backend.app.routes.confirmacion import confirmacion_bp
 from backend.app.routes.sms import sms_bp
 
+# Logging unificado
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s"
+)
+logger = logging.getLogger("backend")
+
 load_dotenv()
 
 logger.info("Arrancando Kiba")
@@ -39,13 +46,6 @@ if app.config.get("SENTRY_DSN"):
         integrations=[FlaskIntegration()],
         traces_sample_rate=0.1
     )
-
-# Logging unificado
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s"
-)
-logger = logging.getLogger("backend")
 
 # Exponer métricas Prometheus en /metrics
 app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
