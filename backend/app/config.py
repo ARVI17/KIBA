@@ -2,10 +2,11 @@
 
 import logging
 import os
-from flask import Flask, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import HTTPException
 from urllib.parse import urlparse
+
+from backend.app.error_handlers import register_error_handlers
 
 # Ajuste automático de esquema para pg8000 o psycopg2
 url = os.getenv("DATABASE_URL", "")
@@ -46,14 +47,3 @@ def create_app():
     register_error_handlers(app)
 
     return app
-
-
-def register_error_handlers(app: Flask) -> None:
-    @app.errorhandler(HTTPException)
-    def handle_http_error(e: HTTPException):
-        return jsonify(error=e.description), e.code
-
-    @app.errorhandler(Exception)
-    def handle_exception(e: Exception):
-        logger.error("Unhandled exception", exc_info=True)
-        return jsonify(error="Internal server error"), 500
