@@ -8,7 +8,8 @@ from backend.app.models.cita import Cita
 from backend.app.models.paciente import Paciente
 from backend.app.models.sms import Especialidad
 from backend.app.utils.token_manager import token_requerido
-from datetime import datetime
+from datetime import datetime, time
+from sqlalchemy.orm import joinedload
 
 logger = logging.getLogger(__name__)
 confirmacion_bp = Blueprint('confirmacion', __name__)
@@ -19,17 +20,31 @@ def obtener_confirmaciones():
     fecha_filtro = request.args.get('fecha')  # Formato esperado: YYYY-MM-DD
     paciente_id = request.args.get('paciente_id')
 
-    query = Confirmacion.query
+    query = Confirmacion.query.options(
+        joinedload(Confirmacion.cita).joinedload(Cita.paciente),
+        joinedload(Confirmacion.cita).joinedload(Cita.especialidad),
+        joinedload(Confirmacion.sms),
+    )
+
+    joined = False
+    if fecha_filtro or paciente_id:
+        query = query.join(Cita)
+        joined = True
 
     if fecha_filtro:
         try:
             fecha = datetime.strptime(fecha_filtro, '%Y-%m-%d').date()
-            query = query.join(Cita).filter(db.func.date(Cita.fecha_hora) == fecha)
+            inicio = datetime.combine(fecha, time.min)
+            fin = datetime.combine(fecha, time.max)
+            query = query.filter(Cita.fecha_hora >= inicio, Cita.fecha_hora <= fin)
         except ValueError:
             return jsonify({"error": "Formato de fecha inválido. Usa YYYY-MM-DD."}), 400
 
     if paciente_id:
-        query = query.join(Cita).filter(Cita.paciente_id == paciente_id)
+        if not joined:
+            query = query.join(Cita)
+            joined = True
+        query = query.filter(Cita.paciente_id == paciente_id)
 
     confirmaciones = query.all()
     resultado = []

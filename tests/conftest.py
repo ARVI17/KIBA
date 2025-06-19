@@ -9,6 +9,7 @@ from backend.app.routes.sms import sms_bp
 from backend.app.routes.auth import auth
 from backend.app.routes.confirmacion import confirmacion_bp
 from backend.app.routes.cita import cita_bp
+from backend.app.routes.paciente import paciente_bp
 from backend.app.models.user import Rol, Usuario
 
 
@@ -21,6 +22,7 @@ def app():
     app.register_blueprint(auth, url_prefix="/api")
     app.register_blueprint(confirmacion_bp, url_prefix="/api")
     app.register_blueprint(cita_bp, url_prefix="/api")
+    app.register_blueprint(paciente_bp, url_prefix="/api")
     app.config["TESTING"] = True
     with app.app_context():
         db.create_all()
