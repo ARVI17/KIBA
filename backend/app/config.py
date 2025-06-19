@@ -2,10 +2,9 @@
 
 import logging
 import os
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import HTTPException
-from urllib.parse import urlparse
+
+
+from backend.app.error_handlers import register_error_handlers
 
 # Ajuste automático de esquema para pg8000 o psycopg2
 url = os.getenv("DATABASE_URL", "")
@@ -34,9 +33,14 @@ if _parsed.path:
     _masked += _parsed.path
 logger.info("Usando DATABASE_URL: %s", _masked)
 
+# Initialize extensions
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
+    """Create and configure the Flask application."""
+    load_dotenv()
+
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = SQLALCHEMY_TRACK_MODIFICATIONS
@@ -45,15 +49,46 @@ def create_app():
 
     register_error_handlers(app)
 
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+    if app.config.get("SENTRY_DSN"):
+        sentry_init(
+            dsn=app.config["SENTRY_DSN"],
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=0.1,
+        )
+
+    # Expose Prometheus metrics
+    app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()})
+
+    # Register blueprints
+    from backend.app.routes.auth import auth
+    from backend.app.routes.specialty import specialty_bp
+    from backend.app.routes.paciente import paciente_bp
+    from backend.app.routes.cita import cita_bp
+    from backend.app.routes.sms import sms_bp
+    from backend.app.routes.confirmacion import confirmacion_bp
+
+    app.register_blueprint(auth, url_prefix="/api")
+    app.register_blueprint(specialty_bp, url_prefix="/api")
+    app.register_blueprint(paciente_bp, url_prefix="/api")
+    app.register_blueprint(cita_bp, url_prefix="/api")
+    app.register_blueprint(sms_bp, url_prefix="/api")
+    app.register_blueprint(confirmacion_bp, url_prefix="/api")
+
+    from backend.app.utils.default_user import seed_default_admin
+    with app.app_context():
+        seed_default_admin()
+
+    @app.route("/")
+    def home():
+        return "KIBA Backend funcionando correctamente ✅"
+
+    @app.route("/health")
+    def health():
+        return {"status": "ok"}, 200
+
     return app
-
-
-def register_error_handlers(app: Flask) -> None:
-    @app.errorhandler(HTTPException)
-    def handle_http_error(e: HTTPException):
-        return jsonify(error=e.description), e.code
-
-    @app.errorhandler(Exception)
-    def handle_exception(e: Exception):
-        logger.error("Unhandled exception", exc_info=True)
-        return jsonify(error="Internal server error"), 500
