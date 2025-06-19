@@ -48,9 +48,9 @@ def cargar_datos():
         if not Usuario.query.filter_by(correo='admin@kiba.com').first():
             admin = Usuario(
                 correo='admin@kiba.com',
-                contrasena='admin123',
                 rol_id=1
             )
+            admin.set_contrasena('admin123')
             db.session.add(admin)
 
         db.session.commit()
