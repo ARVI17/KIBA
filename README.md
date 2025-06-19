@@ -36,6 +36,12 @@ python manage.py runserver
 
 La API estará disponible en `http://localhost:5000/`.
 
+### Herramientas de desarrollo opcionales
+
+Para análisis estático puedes instalar manualmente `mypy` y `bandit`. Estas
+dependencias no forman parte de `requirements.txt` para mantener liviano el
+entorno de producción.
+
 ## Desarrollo del frontend
 
 Dentro de `frontend/` se encuentra el proyecto Vite + React:
