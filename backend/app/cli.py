@@ -29,8 +29,8 @@ def cargar_datos():
         for esp in especialidades:
             db.session.add(Especialidad(nombre=esp))
 
-    if not Usuario.query.filter_by(correo='admin@kiba.com').first():
-        admin = Usuario(correo='admin@kiba.com', rol_id=1)
+    if not Usuario.query.filter_by(correo='admin@citamatic.com').first():
+        admin = Usuario(correo='admin@citamatic.com', rol_id=1)
         admin.set_contrasena('admin123')
         db.session.add(admin)
 
