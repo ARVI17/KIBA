@@ -3,22 +3,9 @@ from backend.app.config import db
 from backend.app.models.sms import SMS, Especialidad
 from backend.app.models.paciente import Paciente
 from backend.app.models.cita import Cita
-from backend.app.models.user import Rol, Usuario
 
 
-def seed_user():
-    admin_role = Rol(nombre="Administrador")
-    operator_role = Rol(nombre="Operador")
-    db.session.add_all([admin_role, operator_role])
-    user = Usuario(correo="user@example.com", rol=admin_role)
-    user.set_contrasena("secret123")
-    db.session.add(user)
-    db.session.commit()
-
-
-def get_token(client, app):
-    with app.app_context():
-        seed_user()
+def get_token(client, seed_user):
     resp = client.post(
         "/api/login",
         json={"correo": "user@example.com", "contrasena": "secret123"},
@@ -39,8 +26,8 @@ def seed_data():
     return paciente, cita, sms
 
 
-def test_confirmar_cita_creates_confirmation(client, app):
-    token = get_token(client, app)
+def test_confirmar_cita_creates_confirmation(client, app, seed_user):
+    token = get_token(client, seed_user)
     with app.app_context():
         paciente, cita, sms = seed_data()
     resp = client.post(

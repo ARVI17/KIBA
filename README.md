@@ -5,7 +5,7 @@ Incluye autenticación por JWT y base de datos PostgreSQL.
 
 ## Variables de entorno
 
-Configure un archivo `.env` a partir de `.env.example` con al menos:
+Copie el archivo `.env.example` a `.env` y complete con al menos:
 
 - `DATABASE_URL` – cadena de conexión para SQLAlchemy.
 - `JWT_SECRET` – clave secreta para firmar tokens.
@@ -13,6 +13,17 @@ Configure un archivo `.env` a partir de `.env.example` con al menos:
 - `FRONTEND_URL` – origen permitido para CORS.
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
+
+## Base de datos
+
+Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
+el esquema inicial con:
+
+```bash
+psql -U user -d kiba -f database/schema.sql
+```
+
+Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 
 ## Desarrollo del backend
 
@@ -48,6 +59,26 @@ Puede construir la imagen y levantar todo el entorno con:
 ```bash
 docker-compose up --build
 ```
+
+## Uso de MySQL de XAMPP en Windows 10
+
+Si trabajas en Windows 10 con XAMPP puedes utilizar el servicio de MySQL que
+viene incluido. Instala el conector de MySQL para Python antes de ejecutar el
+servidor:
+
+```bash
+pip install PyMySQL
+```
+
+En tu archivo `.env` configura `DATABASE_URL` con una cadena similar a la
+siguiente (ajusta usuario, contraseña y base según corresponda):
+
+```env
+DATABASE_URL=mysql+pymysql://root:@localhost:3306/kiba
+```
+
+Al arrancar `mysqld` desde el panel de XAMPP podrás usar `python manage.py
+runserver` normalmente.
 
 ## Despliegue en Render
 
