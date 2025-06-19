@@ -28,11 +28,18 @@ def crear_paciente():
     if Paciente.query.filter_by(celular=celular).first():
         return jsonify({'error': 'Ya existe un paciente con este celular.'}), 400
 
+    programada_dt = None
+    if programada:
+        try:
+            programada_dt = datetime.strptime(programada, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            return jsonify({'error': 'Formato de fecha inválido. Usa YYYY-MM-DD HH:MM:SS'}), 400
+
     nuevo_paciente = Paciente(
         nombre=nombre,
         celular=celular,
         especialidad_id=especialidad_id,
-        programada=datetime.strptime(programada, '%Y-%m-%d %H:%M:%S') if programada else None
+        programada=programada_dt
     )
 
     db.session.add(nuevo_paciente)

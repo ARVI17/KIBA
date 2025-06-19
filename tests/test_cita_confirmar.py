@@ -39,3 +39,42 @@ def test_confirmar_cita_creates_confirmation(client, app, seed_user):
     with app.app_context():
         conf = cita.confirmaciones[0]
         assert conf.sms_id == sms.id
+
+
+def test_crear_cita_fecha_invalida(client, app, seed_user):
+    token = get_token(client, seed_user)
+    with app.app_context():
+        esp = Especialidad(nombre="General")
+        db.session.add(esp)
+        paciente = Paciente(nombre="Ana", celular="555", especialidad=esp)
+        db.session.add(paciente)
+        db.session.commit()
+        esp_id = esp.id
+
+    resp = client.post(
+        "/api/citas",
+        headers={"Authorization": token},
+        json={"celular": "555", "especialidad_id": esp_id, "fecha_hora": "bad"},
+    )
+    assert resp.status_code == 400
+
+
+def test_crear_paciente_programada_invalida(client, app, seed_user):
+    token = get_token(client, seed_user)
+    with app.app_context():
+        esp = Especialidad(nombre="General")
+        db.session.add(esp)
+        db.session.commit()
+        esp_id = esp.id
+
+    resp = client.post(
+        "/api/pacientes",
+        headers={"Authorization": token},
+        json={
+            "nombre": "Ana",
+            "celular": "777",
+            "especialidad_id": esp_id,
+            "programada": "not-a-date",
+        },
+    )
+    assert resp.status_code == 400

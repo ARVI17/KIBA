@@ -31,7 +31,10 @@ def crear_cita():
         return jsonify({'error': 'Paciente no encontrado'}), 404
 
     # Verificar si el paciente ya tiene una cita a esa misma hora
-    fecha_obj = datetime.strptime(fecha_hora, '%Y-%m-%d %H:%M:%S')
+    try:
+        fecha_obj = datetime.strptime(fecha_hora, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        return jsonify({'error': 'Formato de fecha inválido. Usa YYYY-MM-DD HH:MM:SS'}), 400
     conflicto = Cita.query.filter_by(paciente_id=paciente.id, fecha_hora=fecha_obj).first()
     if conflicto:
         return jsonify({'error': 'El paciente ya tiene una cita programada en esa hora'}), 409
