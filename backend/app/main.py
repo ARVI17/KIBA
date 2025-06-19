@@ -4,10 +4,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from backend.app.config import create_app, db
-from backend.app.models.user import Usuario, Rol
 from backend.app.utils.default_user import seed_default_admin
-from backend.app.models.sms import Especialidad, SMS
-from backend.app.models.confirmacion import Confirmacion
 from backend.app.routes.auth import auth
 from flask_cors import CORS
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
@@ -15,7 +12,6 @@ from prometheus_client import make_wsgi_app
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from backend.app.models.sms_pendiente import SMSPendiente
 from backend.app.routes.specialty import specialty_bp
 from backend.app.routes.paciente import paciente_bp
 from backend.app.routes.cita import cita_bp
