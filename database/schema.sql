@@ -17,9 +17,9 @@ CREATE TABLE usuarios (
 -- Datos iniciales
 INSERT INTO roles (nombre) VALUES ('Administrador'), ('Operador');
 
--- Usuario de ejemplo: admin@kiba.com / contraseña: admin123 (encriptar luego)
+-- Usuario de ejemplo: admin@citamatic.com / contraseña: admin123 (encriptar luego)
 INSERT INTO usuarios (nombre, correo, contrasena, rol_id)
-VALUES ('Admin Kiba', 'admin@kiba.com', 'admin123', 1);
+VALUES ('Admin CitaMatic', 'admin@citamatic.com', 'admin123', 1);
 
 CREATE TABLE sms (
     id SERIAL PRIMARY KEY,

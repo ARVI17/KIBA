@@ -85,7 +85,7 @@ def create_app():
 
     @app.route("/")
     def home():
-        return "KIBA Backend funcionando correctamente ✅"
+        return "CitaMatic Backend funcionando correctamente ✅"
 
     @app.route("/health")
     def health():
