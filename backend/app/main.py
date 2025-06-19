@@ -80,11 +80,7 @@ def home():
 def health():
     return {"status": "ok"}, 200
 
-#⚠️ Ruta desactivada por seguridad
-# @app.route('/crear-tablas')
-# def crear_tablas():
-#         db.create_all()
-#         return '✅ Tablas creadas correctamente en la base de datos.'
+
 
 # ⚠️ Código para cargar datos de ejemplo disponible como comando CLI en manage.py
 
