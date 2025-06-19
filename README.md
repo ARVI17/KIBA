@@ -1,7 +1,7 @@
 # KIBA
 
 Aplicación de gestión de citas y envío de SMS basada en **Flask** y **React**.
-Incluye autenticación por JWT y base de datos PostgreSQL.
+PostgreSQL es la base de datos principal del proyecto e incluye autenticación por JWT.
 
 ## Variables de entorno
 
@@ -14,7 +14,7 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 
-## Base de datos
+## Base de datos (PostgreSQL por defecto)
 
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
 el esquema inicial con:
@@ -66,10 +66,10 @@ Puede construir la imagen y levantar todo el entorno con:
 docker-compose up --build
 ```
 
-## Uso de MySQL de XAMPP en Windows 10
+## Uso opcional con MySQL
 
-Si trabajas en Windows 10 con XAMPP puedes utilizar el servicio de MySQL que
-viene incluido. Instala el conector de MySQL para Python antes de ejecutar el
+Si prefieres MySQL puedes utilizar el servicio incluido en XAMPP u otra
+instancia. Instala el conector `PyMySQL` para Python antes de ejecutar el
 servidor:
 
 ```bash
