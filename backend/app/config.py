@@ -2,10 +2,18 @@
 
 import logging
 import os
+from urllib.parse import urlparse
+
+from dotenv import load_dotenv
 from flask import Flask, jsonify
+from flask_cors import CORS
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
-from urllib.parse import urlparse
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from prometheus_client import make_wsgi_app
+from sentry_sdk import init as sentry_init
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 # Ajuste automático de esquema para pg8000 o psycopg2
 url = os.getenv("DATABASE_URL", "")
@@ -34,9 +42,14 @@ if _parsed.path:
     _masked += _parsed.path
 logger.info("Usando DATABASE_URL: %s", _masked)
 
+# Initialize extensions
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
+    """Create and configure the Flask application."""
+    load_dotenv()
+
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = SQLALCHEMY_TRACK_MODIFICATIONS
@@ -44,6 +57,48 @@ def create_app():
     app.config["SENTRY_DSN"] = SENTRY_DSN
 
     register_error_handlers(app)
+
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+    if app.config.get("SENTRY_DSN"):
+        sentry_init(
+            dsn=app.config["SENTRY_DSN"],
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=0.1,
+        )
+
+    # Expose Prometheus metrics
+    app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()})
+
+    # Register blueprints
+    from backend.app.routes.auth import auth
+    from backend.app.routes.specialty import specialty_bp
+    from backend.app.routes.paciente import paciente_bp
+    from backend.app.routes.cita import cita_bp
+    from backend.app.routes.sms import sms_bp
+    from backend.app.routes.confirmacion import confirmacion_bp
+
+    app.register_blueprint(auth, url_prefix="/api")
+    app.register_blueprint(specialty_bp, url_prefix="/api")
+    app.register_blueprint(paciente_bp, url_prefix="/api")
+    app.register_blueprint(cita_bp, url_prefix="/api")
+    app.register_blueprint(sms_bp, url_prefix="/api")
+    app.register_blueprint(confirmacion_bp, url_prefix="/api")
+
+    from backend.app.utils.default_user import seed_default_admin
+    with app.app_context():
+        seed_default_admin()
+
+    @app.route("/")
+    def home():
+        return "KIBA Backend funcionando correctamente ✅"
+
+    @app.route("/health")
+    def health():
+        return {"status": "ok"}, 200
 
     return app
 
