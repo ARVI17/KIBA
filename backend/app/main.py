@@ -22,6 +22,7 @@ from backend.app.routes.cita import cita_bp
 from flask_migrate import Migrate
 from backend.app.routes.confirmacion import confirmacion_bp
 from backend.app.routes.sms import sms_bp
+from backend.app.cli import register_cli
 
 # Logging unificado
 logging.basicConfig(
@@ -67,6 +68,8 @@ app.register_blueprint(sms_bp, url_prefix='/api')
 migrate = Migrate(app, db)
 app.register_blueprint(confirmacion_bp, url_prefix='/api')
 
+register_cli(app)
+
 with app.app_context():
     seed_default_admin()
 
@@ -86,7 +89,7 @@ def health():
 #         db.create_all()
 #         return '✅ Tablas creadas correctamente en la base de datos.'
 
-# ⚠️ Código para cargar datos de ejemplo disponible como comando CLI en manage.py
+# ⚠️ Código para cargar datos de ejemplo disponible como comando CLI en backend.app.cli
 
 if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['1', 'true', 't', 'yes']
