@@ -5,7 +5,7 @@ Incluye autenticación por JWT y base de datos PostgreSQL.
 
 ## Variables de entorno
 
-Configure un archivo `.env` a partir de `.env.example` con al menos:
+Copie el archivo `.env.example` a `.env` y complete con al menos:
 
 - `DATABASE_URL` – cadena de conexión para SQLAlchemy.
 - `JWT_SECRET` – clave secreta para firmar tokens.
