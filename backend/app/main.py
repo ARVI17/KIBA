@@ -1,47 +1,48 @@
 # backend/app/main.py
+
 import logging
 import os
 from dotenv import load_dotenv
+from backend.app.config import create_app, db
+from backend.app.models.user import Usuario, Rol
+from backend.app.utils.default_user import seed_default_admin
+from backend.app.models.sms import Especialidad, SMS
+from backend.app.models.confirmacion import Confirmacion
+from backend.app.routes.auth import auth
 from flask_cors import CORS
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from prometheus_client import make_wsgi_app
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from backend.app.config import create_app, db
-from backend.app.models.user import Usuario, Rol
-from backend.app.models.sms import Especialidad, SMS
-from backend.app.models.confirmacion import Confirmacion
 from backend.app.models.sms_pendiente import SMSPendiente
-from backend.app.routes.auth import auth as auth_bp
 from backend.app.routes.specialty import specialty_bp
 from backend.app.routes.paciente import paciente_bp
 from backend.app.routes.cita import cita_bp
-from backend.app.routes.sms import sms_bp
-from backend.app.routes.confirmacion import confirmacion_bp
-from backend.app.utils.default_user import seed_default_admin
 from flask_migrate import Migrate
+from backend.app.routes.confirmacion import confirmacion_bp
+from backend.app.routes.sms import sms_bp
 
-# Configuración de logging
+# Logging unificado
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s %(message)s"
 )
 logger = logging.getLogger("backend")
 
-# Carga variables de entorno
 load_dotenv()
-logger.info("Arrancando KIBA")
 
-# Crear app y configurar extensiones
+logger.info("Arrancando Kiba")
+
 app = create_app()
+
+# CORS
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# Configurar Sentry si está habilitado
-dsn = app.config.get("SENTRY_DSN")
-if dsn:
+# Sentry
+if app.config.get("SENTRY_DSN"):
     sentry_init(
-        dsn=dsn,
+        dsn=app.config["SENTRY_DSN"],
         integrations=[FlaskIntegration()],
         traces_sample_rate=0.1
     )
@@ -51,37 +52,42 @@ app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
     "/metrics": make_wsgi_app()
 })
 
-# Inicializar DB y migraciones
-db.init_app(app)
+try:
+    db.init_app(app)
+    logger.info("Base de datos inicializada correctamente")
+except Exception:
+    logger.exception("Error al inicializar la base de datos")
+    raise
+
+app.register_blueprint(auth, url_prefix='/api')
+app.register_blueprint(specialty_bp, url_prefix='/api')
+app.register_blueprint(paciente_bp, url_prefix='/api')
+app.register_blueprint(cita_bp, url_prefix='/api')
+app.register_blueprint(sms_bp, url_prefix='/api')
 migrate = Migrate(app, db)
+app.register_blueprint(confirmacion_bp, url_prefix='/api')
 
-# Registrar blueprints
-for bp in [
-    auth_bp,
-    specialty_bp,
-    paciente_bp,
-    cita_bp,
-    sms_bp,
-    confirmacion_bp
-]:
-    app.register_blueprint(bp, url_prefix="/api")
-
-# Sembrar datos iniciales (admin, roles, especialidades)
 with app.app_context():
     seed_default_admin()
 
-# Rutas básicas
-@app.route("/")
+
+@app.route('/')
 def home():
     return 'KIBA Backend funcionando correctamente ✅'
 
-@app.route("/health")
+
+@app.route('/health')
 def health():
     return {"status": "ok"}, 200
 
-# Punto de entrada
-if __name__ == "__main__":
-    debug_flag = os.environ.get('FLASK_DEBUG', '').lower() in ['1', 'true', 't', 'yes']
-    app.run(host='0.0.0.0', port=5000, debug=debug_flag)
-# Exponer la app para Gunicorn
-application = app   # Para compatibilidad con WSGI
+#⚠️ Ruta desactivada por seguridad
+# @app.route('/crear-tablas')
+# def crear_tablas():
+#         db.create_all()
+#         return '✅ Tablas creadas correctamente en la base de datos.'
+
+# ⚠️ Código para cargar datos de ejemplo disponible como comando CLI en manage.py
+
+if __name__ == '__main__':
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['1', 'true', 't', 'yes']
+    app.run(host='0.0.0.0', debug=debug_mode, port=5000)

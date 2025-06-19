@@ -7,13 +7,18 @@ from backend.app.main import app
 from backend.app.config import db
 from backend.app.models.user import Usuario, Rol
 from backend.app.models.sms import Especialidad
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-# Inicializar migraciones y comandos de script
+
+# Configura Migrate
 migrate = Migrate(app, db)
+
+
+# Configura Manager
 manager = Manager(app)
-manager.add_command('db', migrate)
+manager.add_command('db', MigrateCommand)
+
 
 @manager.command
 def crear_tablas():
@@ -22,25 +27,28 @@ def crear_tablas():
         db.create_all()
         print("✅ Tablas creadas correctamente en la base de datos.")
 
+
 @manager.command
 def cargar_datos():
     """Carga datos de ejemplo en la base de datos."""
     with app.app_context():
-        # Roles
         if not Rol.query.first():
             admin_role = Rol(nombre='Administrador')
             operator_role = Rol(nombre='Operador')
-            db.session.add_all([admin_role, operator_role])
+            db.session.add(admin_role)
+            db.session.add(operator_role)
 
-        # Especialidades
         if not Especialidad.query.first():
             especialidades = ['Ortopedia', 'Medicina Interna', 'Pediatría', 'Cardiología']
             for esp in especialidades:
-                db.session.add(Especialidad(nombre=esp))
+                nueva = Especialidad(nombre=esp)
+                db.session.add(nueva)
 
-        # Usuario admin
         if not Usuario.query.filter_by(correo='admin@kiba.com').first():
-            admin = Usuario(correo='admin@kiba.com', rol_id=1)
+            admin = Usuario(
+                correo='admin@kiba.com',
+                rol_id=1
+            )
             admin.set_contrasena('admin123')
             db.session.add(admin)
 
@@ -48,4 +56,5 @@ def cargar_datos():
         print('✅ Datos iniciales cargados correctamente en la base de datos.')
 
 if __name__ == '__main__':
-    manager.run()
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['1', 'true', 't', 'yes']
+    app.run(host='0.0.0.0', debug=debug_mode, port=5000)
