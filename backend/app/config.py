@@ -5,6 +5,7 @@ import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
+from urllib.parse import urlparse
 
 # Ajuste automático de esquema para pg8000 o psycopg2
 url = os.getenv("DATABASE_URL", "")
@@ -25,7 +26,13 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logger = logging.getLogger(__name__)
-logger.info("Usando DATABASE_URL: %s", SQLALCHEMY_DATABASE_URI)
+_parsed = urlparse(SQLALCHEMY_DATABASE_URI)
+_masked = f"{_parsed.scheme}://{_parsed.hostname or ''}"
+if _parsed.port:
+    _masked += f":{_parsed.port}"
+if _parsed.path:
+    _masked += _parsed.path
+logger.info("Usando DATABASE_URL: %s", _masked)
 
 db = SQLAlchemy()
 
