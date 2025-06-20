@@ -26,6 +26,18 @@ psql -U user -d citamatic -f database/schema.sql
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 
+Para crear las tablas mediante SQLAlchemy utilice el comando CLI:
+
+```bash
+python manage.py crear_tablas
+```
+
+Si desea cargar datos de ejemplo ejecute:
+
+```bash
+python manage.py cargar_datos
+```
+
 ## Desarrollo del backend
 
 Instale las dependencias, aplique las migraciones y ejecute el servidor:
