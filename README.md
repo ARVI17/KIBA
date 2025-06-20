@@ -22,6 +22,8 @@ el esquema inicial con:
 
 ```bash
 psql -U user -d citamatic -f database/schema.sql
+flask --app backend.app.main crear-tablas
+flask --app backend.app.main cargar-datos  # opcional
 ```
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.

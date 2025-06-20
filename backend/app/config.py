@@ -27,6 +27,7 @@ if not _env_url or not (
     )
 
 from backend.app.error_handlers import register_error_handlers
+from backend.app.cli import register_cli
 
 # Cargar variables de entorno lo antes posible
 load_dotenv()
@@ -88,6 +89,7 @@ def create_app():
     migrate.init_app(app, db)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     register_error_handlers(app)
+    register_cli(app)
 
     if app.config.get("SENTRY_DSN"):
         sentry_init(
