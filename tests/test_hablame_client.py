@@ -5,7 +5,7 @@ from backend.app.hablame_client import HablameClient
 
 
 def test_send_sms_success():
-    client = HablameClient(account="a", apikey="b", token="c")
+    client = HablameClient(apikey="b")
     bulk = [{"numero": "1", "sms": "hi"}]
     with respx.mock as router:
         route = router.post("https://api103.hablame.co/api/sms/v3/send/marketing/bulk").mock(

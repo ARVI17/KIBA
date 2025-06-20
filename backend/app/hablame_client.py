@@ -6,18 +6,14 @@ from typing import Any, Dict, List
 class HablameClient:
     """Pequeño cliente async para la API de Hablame"""
 
-    def __init__(self, account: str | None = None, apikey: str | None = None, token: str | None = None, base_url: str = "https://api103.hablame.co/api"):
-        self.account = account or os.getenv("HABLAME_ACCOUNT")
-        self.apikey = apikey or os.getenv("HABLAME_APIKEY")
-        self.token = token or os.getenv("HABLAME_TOKEN")
+    def __init__(self, apikey: str | None = None, base_url: str = "https://api103.hablame.co/api"):
+        self.apikey = apikey or os.getenv("HABLAME_API_KEY")
         self.base_url = base_url.rstrip("/")
 
     def _headers(self) -> Dict[str, str]:
         return {
             "Content-Type": "application/json",
-            "Account": self.account or "",
             "ApiKey": self.apikey or "",
-            "Token": self.token or "",
         }
 
     async def ping(self) -> httpx.Response:
