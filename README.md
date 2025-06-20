@@ -87,15 +87,3 @@ DATABASE_URL=mysql+pymysql://root:@localhost:3306/citamatic
 
 Al arrancar `mysqld` desde el panel de XAMPP podrás usar `flask --app backend.app.main run` normalmente.
 
-## Despliegue en Render
-
-Ejemplo de configuración para el servicio:
-
-```json
-{
-  "buildCommand": "pip install -r requirements.txt && cd frontend && npm install && npm run build",
-  "startCommand": "gunicorn backend.app.main:app --bind 0.0.0.0:$PORT"
-}
-```
-
-Asegúrese de definir en el panel de Render todas las variables de entorno necesarias.

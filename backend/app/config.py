@@ -2,7 +2,18 @@
 # backend/app/config.py
 import logging
 import os
+from urllib.parse import urlparse
 
+from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_cors import CORS
+from werkzeug.exceptions import HTTPException
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from prometheus_client import make_wsgi_app
+from dotenv import load_dotenv
+from sentry_sdk import init as sentry_init
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from backend.app.error_handlers import register_error_handlers
 
@@ -53,17 +64,11 @@ def create_app():
         SENTRY_DSN=SENTRY_DSN,
     )
 
-    # Inicializar extensiones
-    db.init_app(app)
-
-    # Registrar manejadores de error
-    from backend.app.error_handlers import register_error_handlers
-    register_error_handlers(app)
-
-    # Initialize extensions
+    # Inicializar extensiones y registrar manejadores de error
     db.init_app(app)
     migrate.init_app(app, db)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
+    register_error_handlers(app)
 
     if app.config.get("SENTRY_DSN"):
         sentry_init(
@@ -105,12 +110,3 @@ def create_app():
     return app
 
 
-def register_error_handlers(app: Flask) -> None:
-    @app.errorhandler(HTTPException)
-    def handle_http_error(e: HTTPException):
-        return jsonify(error=e.description), e.code
-
-    @app.errorhandler(Exception)
-    def handle_exception(e: Exception):
-        logger.error("Unhandled exception", exc_info=True)
-        return jsonify(error="Internal server error"), 500
