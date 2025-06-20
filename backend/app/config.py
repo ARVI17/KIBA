@@ -17,6 +17,9 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 
 from backend.app.error_handlers import register_error_handlers
 
+# Cargar variables de entorno lo antes posible
+load_dotenv()
+
 # Leer la URL de la base de datos desde .env
 def _build_database_uri():
     url = os.getenv("DATABASE_URL", "")
@@ -25,6 +28,7 @@ def _build_database_uri():
         url = url.replace("mysql://", "mysql+pymysql://", 1)
     return url
 
+# URL de la base de datos ya con variables cargadas
 SQLALCHEMY_DATABASE_URI = _build_database_uri()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -38,6 +42,11 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+if not SQLALCHEMY_DATABASE_URI:
+    logger.warning("La variable de entorno DATABASE_URL no est\xC3\xA1 definida")
+if not SENTRY_DSN:
+    logger.info("SENTRY_DSN no definido, Sentry deshabilitado")
 
 # Mostrar URL de conexión (hostname:port/db)
 _parsed = urlparse(SQLALCHEMY_DATABASE_URI)
@@ -54,13 +63,22 @@ migrate = Migrate()
 # Factory de aplicación
 def create_app():
     """Create and configure the Flask application."""
-    load_dotenv()
+
+    db_uri = _build_database_uri()
+    if not db_uri:
+        logger.warning(
+            "DATABASE_URL no establecida; la conexion a la base de datos esta vacia"
+        )
+
+    secret_key = os.getenv("JWT_SECRET", "")
+    if not secret_key:
+        logger.warning("JWT_SECRET no definido")
 
     app = Flask(__name__)
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
+        SQLALCHEMY_DATABASE_URI=db_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=SQLALCHEMY_TRACK_MODIFICATIONS,
-        SECRET_KEY=os.getenv("JWT_SECRET", ""),
+        SECRET_KEY=secret_key,
         SENTRY_DSN=SENTRY_DSN,
     )
 
