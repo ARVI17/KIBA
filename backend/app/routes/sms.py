@@ -24,9 +24,7 @@ _hablame_client = HablameClient()
 def obtener_headers():
     return {
         "Content-Type": "application/json",
-        "Account": os.getenv("HABLAME_ACCOUNT"),
-        "ApiKey": os.getenv("HABLAME_APIKEY"),
-        "Token": os.getenv("HABLAME_TOKEN")
+        "ApiKey": os.getenv("HABLAME_API_KEY"),
     }
 
 # ========================
