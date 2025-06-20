@@ -118,3 +118,79 @@ def test_importar_sms_with_token(client, app, seed_user, monkeypatch):
         headers={"Authorization": token},
     )
     assert resp.status_code == 200
+
+
+def test_enviar_sms_hablame_error(client, seed_user, monkeypatch):
+    token = get_token(client, seed_user)
+
+    def mock_post(url, headers=None, data=None):
+        class R:
+            status_code = 400
+            text = "bad request"
+
+        return R()
+
+    monkeypatch.setattr("backend.app.routes.sms.requests.post", mock_post)
+    resp = client.post(
+        "/api/enviar-sms",
+        json={"numero": "1", "mensaje": "hi"},
+        headers={"Authorization": token},
+    )
+    assert resp.status_code == 400
+    assert resp.get_json() == {"success": False, "detalle": "bad request"}
+
+
+def test_enviar_sms_exception(client, seed_user, monkeypatch):
+    token = get_token(client, seed_user)
+
+    def raise_exc(url, headers=None, data=None):
+        raise Exception("boom")
+
+    monkeypatch.setattr("backend.app.routes.sms.requests.post", raise_exc)
+    resp = client.post(
+        "/api/enviar-sms",
+        json={"numero": "1", "mensaje": "hi"},
+        headers={"Authorization": token},
+    )
+    assert resp.status_code == 500
+    data = resp.get_json()
+    assert data["success"] is False
+    assert "boom" in data["error"]
+
+
+def test_importar_sms_hablame_error(client, seed_user, monkeypatch):
+    token = get_token(client, seed_user)
+
+    def mock_post(url, headers=None, data=None):
+        class R:
+            status_code = 400
+            text = "bad request"
+
+        return R()
+
+    monkeypatch.setattr("backend.app.routes.sms.requests.post", mock_post)
+    resp = client.post(
+        "/api/importar-sms",
+        json={"mensajes": [{"numero": "1", "mensaje": "hi"}]},
+        headers={"Authorization": token},
+    )
+    assert resp.status_code == 400
+    assert resp.get_json() == {"success": False, "detalle": "bad request"}
+
+
+def test_importar_sms_exception(client, seed_user, monkeypatch):
+    token = get_token(client, seed_user)
+
+    def raise_exc(url, headers=None, data=None):
+        raise Exception("boom")
+
+    monkeypatch.setattr("backend.app.routes.sms.requests.post", raise_exc)
+    resp = client.post(
+        "/api/importar-sms",
+        json={"mensajes": [{"numero": "1", "mensaje": "hi"}]},
+        headers={"Authorization": token},
+    )
+    assert resp.status_code == 500
+    data = resp.get_json()
+    assert data["success"] is False
+    assert "boom" in data["error"]
