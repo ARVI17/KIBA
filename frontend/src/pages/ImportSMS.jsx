@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import api from '../api';
+import hablame from '../api/hablame';
 
 export default function ImportSMS() {
   const [archivo, setArchivo] = useState(null);
@@ -24,7 +24,7 @@ export default function ImportSMS() {
 
   const enviarSMSMasivos = async () => {
     try {
-      const response = await api.post('/importar-sms', {
+      const response = await hablame.post('/importar-sms', {
         mensajes: datos,
       });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../api';
+import hablame from '../api/hablame';
 
 export default function SendSMS() {
   const [numero, setNumero] = useState('');
@@ -13,7 +13,7 @@ export default function SendSMS() {
     setRespuesta(null);
 
     try {
-      const res = await api.post('/enviar-sms', {
+      const res = await hablame.post('/enviar-sms', {
         numero,
         mensaje
       });

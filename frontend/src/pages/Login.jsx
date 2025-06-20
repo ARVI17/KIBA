@@ -1,7 +1,7 @@
 // frontend/src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import hablame from '../api/hablame';
 import { useAuth } from '../AuthContext';
 
 export default function Login() {
@@ -19,7 +19,7 @@ export default function Login() {
     setPasswordError('');
     setGenericError('');
     try {
-      const { data } = await api.post('/login', {
+      const { data } = await hablame.post('/login', {
         correo: email,
         contrasena: password,
       });
