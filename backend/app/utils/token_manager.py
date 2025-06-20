@@ -9,11 +9,13 @@ from backend.app.models.user import Usuario
 
 # Función para generar el token
 def generar_token(usuario):
+    # Tiempo de expiración configurable (horas)
+    horas = current_app.config.get('JWT_EXPIRES_HOURS', 1)
     payload = {
         'id': usuario.id,
         'correo': usuario.correo,
         'rol': usuario.rol.nombre,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=12)  # Válido por 12 horas
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=horas)
     }
     secret = current_app.config['JWT_SECRET_KEY']
     token = jwt.encode(payload, secret, algorithm='HS256')
