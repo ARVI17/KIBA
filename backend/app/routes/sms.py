@@ -4,7 +4,6 @@ import logging
 from flask import Blueprint, request, jsonify
 import asyncio
 import json
-import os
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from backend.app.config import db
@@ -16,16 +15,6 @@ from backend.app.hablame_client import HablameClient
 logger = logging.getLogger(__name__)
 sms_bp = Blueprint('sms', __name__)
 _hablame_client = HablameClient()
-
-# ========================
-# Funciones auxiliares
-# ========================
-
-def obtener_headers():
-    return {
-        "Content-Type": "application/json",
-        "ApiKey": os.getenv("HABLAME_API_KEY"),
-    }
 
 # ========================
 # Enviar SMS individual
