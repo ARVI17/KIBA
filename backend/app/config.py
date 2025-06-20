@@ -70,7 +70,7 @@ migrate = Migrate()
 # Factory de la aplicación
 def create_app():
     """Crea y configura la aplicación Flask."""
-    required_vars = ["HABLAME_ACCOUNT", "HABLAME_APIKEY", "HABLAME_TOKEN"]
+    required_vars = ["HABLAME_API_KEY"]
     missing = [var for var in required_vars if not os.getenv(var)]
     if missing:
         raise RuntimeError(

@@ -7,9 +7,9 @@ class HablameClient:
     """Pequeño cliente async para la API de Hablame"""
 
     def __init__(self, account: str | None = None, apikey: str | None = None, token: str | None = None, base_url: str = "https://api103.hablame.co/api"):
-        self.account = account or os.getenv("HABLAME_ACCOUNT")
-        self.apikey = apikey or os.getenv("HABLAME_APIKEY")
-        self.token = token or os.getenv("HABLAME_TOKEN")
+        self.account = account or os.getenv("HABLAME_API_KEY")
+        self.apikey = apikey or os.getenv("HABLAME_API_KEY")
+        self.token = token or os.getenv("HABLAME_API_KEY")
         self.base_url = base_url.rstrip("/")
 
     def _headers(self) -> Dict[str, str]:
