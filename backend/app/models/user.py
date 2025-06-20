@@ -14,7 +14,7 @@ class Rol(db.Model):
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
-    correo = db.Column(db.String(100), unique=True, nullable=False)
+    correo = db.Column(db.String(100), unique=True, nullable=False, index=True)
     contrasena = db.Column(db.String(255), nullable=False)
     rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     rol = db.relationship(

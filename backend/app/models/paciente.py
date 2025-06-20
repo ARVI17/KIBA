@@ -9,8 +9,8 @@ class Paciente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     celular = db.Column(db.String(20), unique=True, nullable=False)
-    especialidad_id = db.Column(db.Integer, db.ForeignKey('especialidades.id'), nullable=False)
-    programada = db.Column(db.DateTime, nullable=True)
+    especialidad_id = db.Column(db.Integer, db.ForeignKey('especialidades.id'), nullable=False, index=True)
+    programada = db.Column(db.DateTime, nullable=True, index=True)
 
     especialidad = db.relationship(
         'Especialidad',
