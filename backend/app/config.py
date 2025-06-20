@@ -15,6 +15,17 @@ from dotenv import load_dotenv
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
+# Load environment variables from .env as soon as the module is imported
+load_dotenv()
+
+_env_url = os.getenv("DATABASE_URL")
+if not _env_url or not (
+    _env_url.startswith("postgres://") or _env_url.startswith("postgresql://")
+):
+    raise RuntimeError(
+        "DATABASE_URL debe definirse y usar el esquema de PostgreSQL"
+    )
+
 from backend.app.error_handlers import register_error_handlers
 
 # Cargar variables de entorno lo antes posible
@@ -63,16 +74,6 @@ migrate = Migrate()
 # Factory de aplicación
 def create_app():
     """Create and configure the Flask application."""
-
-    db_uri = _build_database_uri()
-    if not db_uri:
-        logger.warning(
-            "DATABASE_URL no establecida; la conexion a la base de datos esta vacia"
-        )
-
-    secret_key = os.getenv("JWT_SECRET", "")
-    if not secret_key:
-        logger.warning("JWT_SECRET no definido")
 
     app = Flask(__name__)
     app.config.from_mapping(
