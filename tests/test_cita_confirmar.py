@@ -7,7 +7,7 @@ from backend.app.models.cita import Cita
 
 def get_token(client, seed_user):
     resp = client.post(
-        "/api/login",
+        "/api/v1/auth/login",
         json={"correo": "user@example.com", "contrasena": "secret123"},
     )
     return resp.get_json()["token"]
