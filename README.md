@@ -58,6 +58,8 @@ flask --app backend.app.main run
 ```
 
 La API estará disponible en `http://localhost:5000/`.
+Puedes verificar la conexión a la base de datos visitando
+`http://localhost:5000/api/v1/health/db`.
 ## Autenticación
 
 Obten un token mediante la ruta `/api/login` enviando `correo` y `contrasena`.

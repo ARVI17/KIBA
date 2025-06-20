@@ -142,7 +142,8 @@ def create_app():
     with app.app_context():
         seed_default_admin()
 
-    # Rutas de salud
+    # Rutas de salud. Incluye la verificación de base de datos en
+    # ``/api/v1/health/db`` además de las rutas básicas ``/`` y ``/health``.
     @app.route("/")
     def home():
         return "CitaMatic Backend funcionando correctamente ✅"
