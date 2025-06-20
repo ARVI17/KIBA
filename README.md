@@ -8,7 +8,7 @@ PostgreSQL es la base de datos principal del proyecto e incluye autenticación p
 Copie el archivo `.env.example` a `.env` y complete con al menos:
 
 - `DATABASE_URL` – cadena de conexión para SQLAlchemy.
-- `JWT_SECRET` – clave secreta para firmar tokens.
+- `SECRET_KEY` – clave secreta para firmar tokens (también se acepta `JWT_SECRET`).
 - `HABLAME_ACCOUNT`, `HABLAME_APIKEY`, `HABLAME_TOKEN` – credenciales del servicio SMS.
 - `FRONTEND_URL` – origen permitido para CORS (si falta se usa `*`).
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
