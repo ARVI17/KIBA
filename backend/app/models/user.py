@@ -17,7 +17,11 @@ class Usuario(db.Model):
     correo = db.Column(db.String(100), unique=True, nullable=False)
     contrasena = db.Column(db.String(255), nullable=False)
     rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    rol = db.relationship('Rol', backref='usuarios')
+    rol = db.relationship(
+        'Rol',
+        backref=db.backref('usuarios', lazy='selectin'),
+        lazy='joined'
+    )
 
     def set_contrasena(self, contrasena_plana):
         self.contrasena = bcrypt.hashpw(contrasena_plana.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')

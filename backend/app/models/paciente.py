@@ -12,7 +12,11 @@ class Paciente(db.Model):
     especialidad_id = db.Column(db.Integer, db.ForeignKey('especialidades.id'), nullable=False)
     programada = db.Column(db.DateTime, nullable=True)
 
-    especialidad = db.relationship('Especialidad', backref=db.backref('pacientes', lazy=True))
+    especialidad = db.relationship(
+        'Especialidad',
+        backref=db.backref('pacientes', lazy='selectin'),
+        lazy='joined'
+    )
 
     def to_dict(self):
         return {
