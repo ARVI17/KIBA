@@ -5,6 +5,7 @@ def test_login_success(client, seed_user):
     )
     assert resp.status_code == 200
     data = resp.get_json()
+    assert data["success"] is True
     assert "token" in data
     assert data["rol"] == "Administrador"
 
