@@ -7,9 +7,8 @@ CREATE TABLE roles (
 
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    correo VARCHAR(100) UNIQUE,
-    contrasena VARCHAR(255),
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
     rol_id INTEGER,
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
@@ -18,20 +17,24 @@ CREATE TABLE usuarios (
 INSERT INTO roles (nombre) VALUES ('Administrador'), ('Operador');
 
 -- Usuario de ejemplo: admin@citamatic.com / contraseña: admin123 (encriptar luego)
-INSERT INTO usuarios (nombre, correo, contrasena, rol_id)
-VALUES ('Admin CitaMatic', 'admin@citamatic.com', 'admin123', 1);
-
-CREATE TABLE sms (
-    id SERIAL PRIMARY KEY,
-    numero VARCHAR(20),
-    mensaje TEXT,
-    estado VARCHAR(50),
-    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+INSERT INTO usuarios (correo, contrasena, rol_id)
+VALUES ('admin@citamatic.com', 'admin123', 1);
 
 CREATE TABLE especialidades (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE sms (
+    id SERIAL PRIMARY KEY,
+    celular VARCHAR(20) NOT NULL,
+    mensaje TEXT NOT NULL,
+    especialidad_id INTEGER,
+    fecha_envio TIMESTAMP,
+    estado VARCHAR(50),
+    token_confirmacion VARCHAR(50) UNIQUE,
+    confirmado BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (especialidad_id) REFERENCES especialidades(id)
 );
 
 CREATE TABLE pacientes (

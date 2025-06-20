@@ -17,14 +17,9 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
 ## Base de datos (PostgreSQL por defecto)
 
-Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos y ejecute
-el esquema inicial con:
+Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos vacía y
+aplique las migraciones iniciales con:
 
-```bash
-psql -U user -d citamatic -f database/schema.sql
-flask --app backend.app.main crear-tablas
-flask --app backend.app.main cargar-datos  # opcional
-```
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 
