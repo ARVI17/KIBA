@@ -16,6 +16,7 @@ from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
 from backend.app.error_handlers import register_error_handlers
+from backend.app.cli import register_cli
 
 # Leer la URL de la base de datos desde .env
 def _build_database_uri():
@@ -69,6 +70,7 @@ def create_app():
     migrate.init_app(app, db)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     register_error_handlers(app)
+    register_cli(app)
 
     if app.config.get("SENTRY_DSN"):
         sentry_init(
