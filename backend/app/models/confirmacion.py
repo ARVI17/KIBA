@@ -12,8 +12,16 @@ class Confirmacion(db.Model):
     confirmada_en = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relaciones
-    cita = db.relationship('Cita', back_populates='confirmaciones')
-    sms = db.relationship('SMS', backref='confirmaciones')
+    cita = db.relationship(
+        'Cita',
+        back_populates='confirmaciones',
+        lazy='joined'
+    )
+    sms = db.relationship(
+        'SMS',
+        backref=db.backref('confirmaciones', lazy='selectin'),
+        lazy='joined'
+    )
 
     def __repr__(self):
         return f'<Confirmacion {self.id} - Cita {self.cita_id} - SMS {self.sms_id}>'

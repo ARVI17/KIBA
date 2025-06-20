@@ -7,7 +7,6 @@ from backend.app.models.paciente import Paciente
 from backend.app.models.sms import Especialidad
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
-from sqlalchemy.orm import selectinload
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +50,5 @@ def crear_paciente():
 @paciente_bp.route('/pacientes', methods=['GET'])
 @token_requerido
 def listar_pacientes():
-    pacientes = (
-        Paciente.query.options(selectinload(Paciente.especialidad)).all()
-    )
+    pacientes = Paciente.query.all()
     return jsonify([paciente.to_dict() for paciente in pacientes]), 200

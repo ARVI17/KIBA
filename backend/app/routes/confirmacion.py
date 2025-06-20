@@ -8,7 +8,6 @@ from backend.app.models.cita import Cita
 from backend.app.models.paciente import Paciente
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime, time
-from sqlalchemy.orm import joinedload
 
 logger = logging.getLogger(__name__)
 confirmacion_bp = Blueprint('confirmacion', __name__)
@@ -19,11 +18,7 @@ def obtener_confirmaciones():
     fecha_filtro = request.args.get('fecha')  # Formato esperado: YYYY-MM-DD
     paciente_id = request.args.get('paciente_id')
 
-    query = Confirmacion.query.options(
-        joinedload(Confirmacion.cita).joinedload(Cita.paciente),
-        joinedload(Confirmacion.cita).joinedload(Cita.especialidad),
-        joinedload(Confirmacion.sms),
-    )
+    query = Confirmacion.query
 
     joined = False
     if fecha_filtro or paciente_id:
