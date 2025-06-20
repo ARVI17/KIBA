@@ -1,13 +1,40 @@
 from flask import Blueprint, request, jsonify
 import logging
 from backend.app.config import db
-from backend.app.models.user import Usuario
+from backend.app.models.user import Usuario, Rol
 from backend.app.utils.token_manager import generar_token, token_requerido
 
 logger = logging.getLogger(__name__)
 
 
-auth = Blueprint('auth', __name__)
+auth = Blueprint('auth', __name__, url_prefix='/v1/auth')
+
+
+@auth.route('/register', methods=['POST'])
+def register():
+    datos = request.get_json() or {}
+    correo = datos.get('correo')
+    contrasena = datos.get('contrasena')
+
+    if not correo or not contrasena:
+        return jsonify({'success': False, 'error': 'Correo y contraseña son obligatorios.'}), 400
+
+    if Usuario.query.filter_by(correo=correo).first():
+        return jsonify({'success': False, 'error': 'Usuario ya existe.'}), 400
+
+    rol = Rol.query.filter_by(nombre='Operador').first()
+    if not rol:
+        rol = Rol(nombre='Operador')
+        db.session.add(rol)
+        db.session.commit()
+
+    nuevo_usuario = Usuario(correo=correo, rol=rol)
+    nuevo_usuario.set_contrasena(contrasena)
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    token = generar_token(nuevo_usuario)
+    return jsonify({'success': True, 'token': token, 'rol': rol.nombre}), 201
 
 
 
@@ -61,12 +88,11 @@ def crear_admin():
 
     return jsonify({'mensaje': 'Administrador creado exitosamente.'}), 201
 
-@auth.route('/perfil', methods=['GET'])
+@auth.route('/me', methods=['GET'])
 @token_requerido
-def perfil():
+def me():
     usuario = request.usuario
     return jsonify({
-        'mensaje': 'Acceso permitido',
         'correo': usuario.correo,
         'rol': usuario.rol.nombre
     }), 200

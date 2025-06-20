@@ -15,7 +15,7 @@ def generar_token(usuario):
         'rol': usuario.rol.nombre,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=12)  # Válido por 12 horas
     }
-    secret = current_app.config['SECRET_KEY']
+    secret = current_app.config['JWT_SECRET_KEY']
     token = jwt.encode(payload, secret, algorithm='HS256')
     return token
 
@@ -34,7 +34,7 @@ def token_requerido(f):
             return jsonify({'error': 'Token de acceso requerido.'}), 401
 
         try:
-            secret = current_app.config['SECRET_KEY']
+            secret = current_app.config['JWT_SECRET_KEY']
             datos = jwt.decode(token, secret, algorithms=['HS256'])
             usuario = Usuario.query.get(datos['id'])
             if not usuario:

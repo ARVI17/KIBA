@@ -35,12 +35,11 @@ def _build_database_uri(url: str) -> str:
 SQLALCHEMY_DATABASE_URI = _build_database_uri(DATABASE_URL)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-# Clave secreta de Flask
-SECRET_KEY = os.getenv("SECRET_KEY") or os.getenv("JWT_SECRET")
-if not SECRET_KEY:
-    raise RuntimeError(
-        "SECRET_KEY o JWT_SECRET debe definirse en las variables de entorno"
-    )
+# Claves secretas
+SECRET_KEY = os.getenv("SECRET_KEY", "changeme")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+if not JWT_SECRET_KEY:
+    raise RuntimeError("JWT_SECRET_KEY debe definirse en las variables de entorno")
 
 # Configuración de Sentry
 SENTRY_DSN = os.getenv("SENTRY_DSN") or None
@@ -84,6 +83,7 @@ def create_app():
         SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
         SQLALCHEMY_TRACK_MODIFICATIONS=SQLALCHEMY_TRACK_MODIFICATIONS,
         SECRET_KEY=SECRET_KEY,
+        JWT_SECRET_KEY=JWT_SECRET_KEY,
         SENTRY_DSN=SENTRY_DSN,
     )
 

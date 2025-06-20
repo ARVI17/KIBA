@@ -5,7 +5,7 @@ import pytest
 
 # Ensure a default DATABASE_URL so the module can be imported
 os.environ.setdefault("DATABASE_URL", "postgresql://user:pass@localhost/db")
-os.environ.setdefault("SECRET_KEY", "testsecret")
+os.environ.setdefault("JWT_SECRET_KEY", "testsecret")
 os.environ.setdefault("HABLAME_ACCOUNT", "acc")
 os.environ.setdefault("HABLAME_APIKEY", "key")
 os.environ.setdefault("HABLAME_TOKEN", "token")
@@ -14,7 +14,7 @@ import backend.app.config as config
 
 def setup_env(url):
     os.environ["DATABASE_URL"] = url
-    os.environ["SECRET_KEY"] = "testsecret"
+    os.environ["JWT_SECRET_KEY"] = "testsecret"
     os.environ["HABLAME_ACCOUNT"] = "acc"
     os.environ["HABLAME_APIKEY"] = "key"
     os.environ["HABLAME_TOKEN"] = "token"
@@ -46,7 +46,7 @@ def test_log_message_masked(monkeypatch, caplog):
 
 def test_cors_frontend_url_used(monkeypatch):
     os.environ["DATABASE_URL"] = "sqlite:///:memory:"
-    os.environ["SECRET_KEY"] = "secret"
+    os.environ["JWT_SECRET_KEY"] = "secret"
     os.environ["FRONTEND_URL"] = "https://front.test"
 
     captured = {}
@@ -63,7 +63,7 @@ def test_cors_frontend_url_used(monkeypatch):
 
 def test_cors_default_wildcard_warning(monkeypatch, caplog):
     os.environ["DATABASE_URL"] = "sqlite:///:memory:"
-    os.environ["SECRET_KEY"] = "secret"
+    os.environ["JWT_SECRET_KEY"] = "secret"
     os.environ.pop("FRONTEND_URL", None)
 
     captured = {}
