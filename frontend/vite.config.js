@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     build: {
-      outDir: 'frontend/dist',
+      outDir: 'dist',
       chunkSizeWarningLimit: 500,
       rollupOptions: {
         output: {
