@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api';
+import hablame from '../api/hablame';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
@@ -9,7 +9,7 @@ export default function Reports() {
   const [historial, setHistorial] = useState([]);
 
   useEffect(() => {
-    api.get('/historial')
+    hablame.get('/historial')
       .then(res => setHistorial(res.data))
       .catch(err => console.error('Error al cargar historial:', err));
   }, []);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import hablame from '../api/hablame';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ export default function Register() {
     e.preventDefault();
     setError('');
     try {
-      const { data } = await api.post('/crear-admin', {
+      const { data } = await hablame.post('/crear-admin', {
         correo: email,
         contrasena: password
       });

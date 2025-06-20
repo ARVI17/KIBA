@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api';
+import hablame from '../api/hablame';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -23,7 +23,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    api.get('/dashboard')
+    hablame.get('/dashboard')
       .then(res => setEstadisticas(res.data))
       .catch(err => console.error('Error cargando dashboard:', err));
   }, []);
