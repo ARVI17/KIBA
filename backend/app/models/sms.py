@@ -22,7 +22,11 @@ class SMS(db.Model):
     token_confirmacion = db.Column(db.String(50), unique=True)
     confirmado = db.Column(db.Boolean, default=False)
 
-    especialidad = db.relationship('Especialidad', backref='sms')
+    especialidad = db.relationship(
+        'Especialidad',
+        backref=db.backref('sms', lazy='selectin'),
+        lazy='joined'
+    )
 
     def __repr__(self):
         return f'<SMS {self.celular}>'

@@ -7,10 +7,7 @@ PostgreSQL es la base de datos principal del proyecto e incluye autenticación p
 
 Copie el archivo `.env.example` a `.env` y complete con al menos:
 
-- `DATABASE_URL` – cadena de conexión para SQLAlchemy.
-- `SECRET_KEY` – clave secreta para firmar tokens (también se acepta `JWT_SECRET`).
-- `HABLAME_API_KEY` – credencial del servicio SMS.
-- `HABLAME_ACCOUNT`, `HABLAME_APIKEY` y `HABLAME_TOKEN` – credenciales de la API v3 de Hablame.
+
 - `FRONTEND_URL` – origen permitido para CORS (si falta se usa `*`).
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
@@ -71,6 +68,15 @@ Incluye `Authorization: Bearer <token>` en tus peticiones protegidas.
 Para análisis estático puedes instalar manualmente `mypy` y `bandit`. Estas
 dependencias no forman parte de `requirements.txt` para mantener liviano el
 entorno de producción.
+
+### Pre-commit
+
+Para ejecutar Black, Flake8 y las herramientas de frontend antes de cada
+commit instala los hooks con:
+
+```bash
+pre-commit install
+```
 
 ## Desarrollo del frontend
 

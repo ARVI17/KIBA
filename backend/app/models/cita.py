@@ -13,8 +13,16 @@ class Cita(db.Model):
     creado_en = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relaciones
-    paciente = db.relationship('Paciente', backref='citas')
-    especialidad = db.relationship('Especialidad', backref='citas')
+    paciente = db.relationship(
+        'Paciente',
+        backref=db.backref('citas', lazy='selectin'),
+        lazy='joined'
+    )
+    especialidad = db.relationship(
+        'Especialidad',
+        backref=db.backref('citas', lazy='selectin'),
+        lazy='joined'
+    )
     
     # Relación con confirmaciones
     confirmaciones = db.relationship('Confirmacion', back_populates='cita', cascade="all, delete-orphan")
