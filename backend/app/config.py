@@ -1,5 +1,8 @@
 # backend/app/config.py
-# backend/app/config.py
+# -*- coding: utf-8 -*-
+"""Configuración de la aplicación Flask para CitaMatic.
+Este módulo configura la base de datos, extensiones, CORS, Sentry y rutas de la aplicación.
+""" 
 import logging
 import os
 from urllib.parse import urlparse
@@ -14,52 +17,41 @@ from dotenv import load_dotenv
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-# Load environment variables from .env as soon as the module is imported
+# Cargar variables de entorno desde .env
 load_dotenv()
 
-_env_url = os.getenv("DATABASE_URL")
-if not _env_url or not (
-    _env_url.startswith("postgres://") or _env_url.startswith("postgresql://")
-):
-    raise RuntimeError(
-        "DATABASE_URL debe definirse y usar el esquema de PostgreSQL"
-    )
+# Validar configuración de base de datos
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL or not (DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql://")):
+    raise RuntimeError("DATABASE_URL debe definirse y usar el esquema de PostgreSQL")
 
-from backend.app.error_handlers import register_error_handlers
-from backend.app.cli import register_cli
-
-# Cargar variables de entorno lo antes posible
-load_dotenv()
-
-# Leer la URL de la base de datos desde .env
-def _build_database_uri():
-    url = os.getenv("DATABASE_URL", "")
-    # Ajuste automático de mysql:// a mysql+pymysql://
+# Construir URI de SQLAlchemy
+def _build_database_uri(url: str) -> str:
+    # Ajuste automático de mysql:// a mysql+pymysql:// si fuera necesario
     if url.startswith("mysql://"):
-        url = url.replace("mysql://", "mysql+pymysql://", 1)
+        return url.replace("mysql://", "mysql+pymysql://", 1)
     return url
 
-# URL de la base de datos ya con variables cargadas
-SQLALCHEMY_DATABASE_URI = _build_database_uri()
+SQLALCHEMY_DATABASE_URI = _build_database_uri(DATABASE_URL)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+# Clave secreta de Flask
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY debe definirse en las variables de entorno")
+
 # Configuración de Sentry
-SENTRY_DSN = os.getenv("SENTRY_DSN", None)
+SENTRY_DSN = os.getenv("SENTRY_DSN") or None
 
 # Logging básico
-t_log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
-    level=getattr(logging, t_log_level, logging.INFO),
+    level=getattr(logging, log_level, logging.INFO),
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-if not SQLALCHEMY_DATABASE_URI:
-    logger.warning("La variable de entorno DATABASE_URL no est\xC3\xA1 definida")
-if not SENTRY_DSN:
-    logger.info("SENTRY_DSN no definido, Sentry deshabilitado")
-
-# Mostrar URL de conexión (hostname:port/db)
+# Mostrar URL de conexión (hostname:port/db) sin revelar credenciales completas
 _parsed = urlparse(SQLALCHEMY_DATABASE_URI)
 _masked = f"{_parsed.scheme}://{_parsed.hostname or ''}"
 if _parsed.port:
@@ -67,45 +59,56 @@ if _parsed.port:
 if _parsed.path:
     _masked += _parsed.path
 logger.info("Usando DATABASE_URL: %s", _masked)
+if not SENTRY_DSN:
+    logger.info("SENTRY_DSN no definido, Sentry deshabilitado")
 
+# Inicialización de extensiones
 db = SQLAlchemy()
 migrate = Migrate()
 
-# Factory de aplicación
+# Factory de la aplicación
 def create_app():
-    """Create and configure the Flask application."""
-
+    """Crea y configura la aplicación Flask."""
     app = Flask(__name__)
+
+    # Carga configuración
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI=db_uri,
+        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
         SQLALCHEMY_TRACK_MODIFICATIONS=SQLALCHEMY_TRACK_MODIFICATIONS,
-        SECRET_KEY=secret_key,
+        SECRET_KEY=SECRET_KEY,
         SENTRY_DSN=SENTRY_DSN,
     )
 
-    # Inicializar extensiones y registrar manejadores de error
+    # Inicializar extensiones
     db.init_app(app)
     migrate.init_app(app, db)
 
-    frontend_url = os.getenv("FRONTEND_URL")
-    if not frontend_url:
+    # Configurar CORS
+    frontend_url = os.getenv("FRONTEND_URL") or "*"
+    if frontend_url == "*":
         logger.warning("FRONTEND_URL no establecido, usando '*' para CORS")
-        frontend_url = "*"
     CORS(app, resources={r"/api/*": {"origins": frontend_url}})
+
+    # Registrar manejadores de error
+    from backend.app.error_handlers import register_error_handlers
     register_error_handlers(app)
+
+    # Registrar comandos CLI personalizados (evitando import circular)
+    from backend.app.cli import register_cli
     register_cli(app)
 
-    if app.config.get("SENTRY_DSN"):
+    # Configurar Sentry si está definido
+    if SENTRY_DSN:
         sentry_init(
-            dsn=app.config["SENTRY_DSN"],
+            dsn=SENTRY_DSN,
             integrations=[FlaskIntegration()],
             traces_sample_rate=0.1,
         )
 
-    # Expose Prometheus metrics
+    # Exponer métricas de Prometheus
     app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {"/metrics": make_wsgi_app()})
 
-    # Register blueprints
+    # Registrar blueprints
     from backend.app.routes.auth import auth
     from backend.app.routes.specialty import specialty_bp
     from backend.app.routes.paciente import paciente_bp
@@ -120,10 +123,12 @@ def create_app():
     app.register_blueprint(sms_bp, url_prefix="/api")
     app.register_blueprint(confirmacion_bp, url_prefix="/api")
 
+    # Semilla de usuario admin por defecto
     from backend.app.utils.default_user import seed_default_admin
     with app.app_context():
         seed_default_admin()
 
+    # Rutas de salud
     @app.route("/")
     def home():
         return "CitaMatic Backend funcionando correctamente ✅"
@@ -133,5 +138,3 @@ def create_app():
         return {"status": "ok"}, 200
 
     return app
-
-
