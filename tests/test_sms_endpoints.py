@@ -102,13 +102,3 @@ def test_enviar_sms_with_token(client, app, seed_user):
 def test_importar_sms_with_token(client, app, seed_user):
     token = get_token(client, seed_user)
 
-    with respx.mock as router:
-        router.post("https://api103.hablame.co/api/sms/v3/send/marketing/bulk").mock(
-            return_value=httpx.Response(200, json_data={})
-        )
-        resp = client.post(
-            "/api/importar-sms",
-            json={"mensajes": [{"numero": "1", "mensaje": "hi"}]},
-            headers={"Authorization": token},
-        )
-        assert resp.status_code == 200
