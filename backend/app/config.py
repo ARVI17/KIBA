@@ -41,6 +41,9 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 if not JWT_SECRET_KEY:
     raise RuntimeError("JWT_SECRET_KEY debe definirse en las variables de entorno")
 
+# Tiempo de expiración del JWT en horas
+JWT_EXPIRES_HOURS = int(os.getenv("JWT_EXPIRES_HOURS", 1))
+
 # Configuración de Sentry
 SENTRY_DSN = os.getenv("SENTRY_DSN") or None
 
@@ -84,6 +87,7 @@ def create_app():
         SQLALCHEMY_TRACK_MODIFICATIONS=SQLALCHEMY_TRACK_MODIFICATIONS,
         SECRET_KEY=SECRET_KEY,
         JWT_SECRET_KEY=JWT_SECRET_KEY,
+        JWT_EXPIRES_HOURS=JWT_EXPIRES_HOURS,
         SENTRY_DSN=SENTRY_DSN,
     )
 

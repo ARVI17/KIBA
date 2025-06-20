@@ -11,6 +11,7 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 - `LOG_LEVEL` – opcional, nivel de logging (INFO por defecto).
+- `JWT_EXPIRES_HOURS` – opcional, horas de validez del token (1 por defecto).
 
 El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
 ## Base de datos (PostgreSQL por defecto)
