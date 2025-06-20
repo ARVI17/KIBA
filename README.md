@@ -26,6 +26,28 @@ psql -U user -d citamatic -f database/schema.sql
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 
+## Configuración rápida sin Docker
+
+Siga estos pasos para levantar el proyecto localmente sin utilizar contenedores:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+flask --app backend.app.main db upgrade
+python manage.py cargar_datos
+flask --app backend.app.main run
+```
+
+En otra terminal inicie el frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
 ## Desarrollo del backend
 
 Instale las dependencias, aplique las migraciones y ejecute el servidor:
