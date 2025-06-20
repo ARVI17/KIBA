@@ -63,6 +63,15 @@ Para análisis estático puedes instalar manualmente `mypy` y `bandit`. Estas
 dependencias no forman parte de `requirements.txt` para mantener liviano el
 entorno de producción.
 
+### Pre-commit
+
+Para ejecutar Black, Flake8 y las herramientas de frontend antes de cada
+commit instala los hooks con:
+
+```bash
+pre-commit install
+```
+
 ## Desarrollo del frontend
 
 Dentro de `frontend/` se encuentra el proyecto Vite + React:
