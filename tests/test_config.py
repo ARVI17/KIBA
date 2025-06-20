@@ -76,7 +76,6 @@ def test_cors_default_wildcard_warning(monkeypatch, caplog):
     assert any("FRONTEND_URL" in rec.getMessage() for rec in caplog.records)
 
 
-@pytest.mark.parametrize("missing", ["HABLAME_API_KEY"])
 def test_missing_hablame_vars_raises(missing):
     setup_env("sqlite:///:memory:")
     os.environ.pop(missing, None)
