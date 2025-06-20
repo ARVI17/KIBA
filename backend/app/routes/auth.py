@@ -21,20 +21,24 @@ def login():
 
     if not correo or not contrasena:
         logger.warning("Login fallido: faltan datos")
-        return jsonify({'error': 'Correo y contraseña son obligatorios.'}), 400
+        return jsonify({'success': False,
+                        'error': 'Correo y contraseña son obligatorios.'}), 400
 
     usuario = Usuario.query.filter_by(correo=correo).first()
     if not usuario:
         logger.warning("Login fallido: usuario no encontrado")
-        return jsonify({'error': 'Usuario no encontrado.'}), 404
+        return jsonify({'success': False, 'error': 'Usuario no encontrado.'}), 404
 
     if not usuario.verificar_contrasena(contrasena):
         logger.warning("Login fallido: contraseña incorrecta")
-        return jsonify({'error': 'Contraseña incorrecta.'}), 401
+        return jsonify({'success': False, 'error': 'Contraseña incorrecta.'}), 401
 
     token = generar_token(usuario)
     logger.info("Login exitoso para %s", correo)
-    return jsonify({'mensaje': 'Login exitoso', 'token': token, 'rol': usuario.rol.nombre}), 200
+    return jsonify({'success': True,
+                    'mensaje': 'Login exitoso',
+                    'token': token,
+                    'rol': usuario.rol.nombre}), 200
 
 @auth.route('/crear-admin', methods=['POST'])
 def crear_admin():

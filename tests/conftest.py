@@ -5,6 +5,9 @@ import pytest
 # Ensure valid DATABASE_URL before importing the config module
 os.environ.setdefault("DATABASE_URL", "postgresql://user:pass@localhost/db")
 os.environ.setdefault("SECRET_KEY", "testsecret")
+os.environ.setdefault("HABLAME_ACCOUNT", "acc")
+os.environ.setdefault("HABLAME_APIKEY", "key")
+os.environ.setdefault("HABLAME_TOKEN", "token")
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -17,6 +20,9 @@ from backend.app.models.user import Rol, Usuario
 def app():
     os.environ["DATABASE_URL"] = "postgresql://user:pass@localhost/db"
     os.environ["SECRET_KEY"] = "testsecret"
+    os.environ["HABLAME_ACCOUNT"] = "acc"
+    os.environ["HABLAME_APIKEY"] = "key"
+    os.environ["HABLAME_TOKEN"] = "token"
     config.SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     app = config.create_app()
     app.config["TESTING"] = True
