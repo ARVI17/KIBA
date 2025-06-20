@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from backend.app.config import db
 from backend.app.models.cita import Cita
 from backend.app.models.paciente import Paciente
-from backend.app.models.sms import Especialidad, SMS
+from backend.app.models.sms import SMS
 from backend.app.utils.token_manager import token_requerido
 from datetime import datetime
 from backend.app.models.confirmacion import Confirmacion

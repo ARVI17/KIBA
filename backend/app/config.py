@@ -4,18 +4,32 @@ import logging
 import os
 from urllib.parse import urlparse
 
-from flask import Flask, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
-from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from prometheus_client import make_wsgi_app
 from dotenv import load_dotenv
 from sentry_sdk import init as sentry_init
 from sentry_sdk.integrations.flask import FlaskIntegration
 
+# Load environment variables from .env as soon as the module is imported
+load_dotenv()
+
+_env_url = os.getenv("DATABASE_URL")
+if not _env_url or not (
+    _env_url.startswith("postgres://") or _env_url.startswith("postgresql://")
+):
+    raise RuntimeError(
+        "DATABASE_URL debe definirse y usar el esquema de PostgreSQL"
+    )
+
 from backend.app.error_handlers import register_error_handlers
+from backend.app.cli import register_cli
+
+# Cargar variables de entorno lo antes posible
+load_dotenv()
 
 # Leer la URL de la base de datos desde .env
 def _build_database_uri():
@@ -25,6 +39,7 @@ def _build_database_uri():
         url = url.replace("mysql://", "mysql+pymysql://", 1)
     return url
 
+# URL de la base de datos ya con variables cargadas
 SQLALCHEMY_DATABASE_URI = _build_database_uri()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -38,6 +53,11 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+if not SQLALCHEMY_DATABASE_URI:
+    logger.warning("La variable de entorno DATABASE_URL no est\xC3\xA1 definida")
+if not SENTRY_DSN:
+    logger.info("SENTRY_DSN no definido, Sentry deshabilitado")
 
 # Mostrar URL de conexión (hostname:port/db)
 _parsed = urlparse(SQLALCHEMY_DATABASE_URI)
@@ -54,21 +74,26 @@ migrate = Migrate()
 # Factory de aplicación
 def create_app():
     """Create and configure the Flask application."""
-    load_dotenv()
 
     app = Flask(__name__)
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI,
+        SQLALCHEMY_DATABASE_URI=db_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=SQLALCHEMY_TRACK_MODIFICATIONS,
-        SECRET_KEY=os.getenv("JWT_SECRET", ""),
+        SECRET_KEY=secret_key,
         SENTRY_DSN=SENTRY_DSN,
     )
 
     # Inicializar extensiones y registrar manejadores de error
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+    frontend_url = os.getenv("FRONTEND_URL")
+    if not frontend_url:
+        logger.warning("FRONTEND_URL no establecido, usando '*' para CORS")
+        frontend_url = "*"
+    CORS(app, resources={r"/api/*": {"origins": frontend_url}})
     register_error_handlers(app)
+    register_cli(app)
 
     if app.config.get("SENTRY_DSN"):
         sentry_init(

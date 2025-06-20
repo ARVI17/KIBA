@@ -10,7 +10,7 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `DATABASE_URL` – cadena de conexión para SQLAlchemy.
 - `JWT_SECRET` – clave secreta para firmar tokens.
 - `HABLAME_ACCOUNT`, `HABLAME_APIKEY`, `HABLAME_TOKEN` – credenciales del servicio SMS.
-- `FRONTEND_URL` – origen permitido para CORS.
+- `FRONTEND_URL` – origen permitido para CORS (si falta se usa `*`).
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
 
@@ -20,9 +20,6 @@ El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una d
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos vacía y
 aplique las migraciones iniciales con:
 
-```bash
-flask --app backend.app.main db upgrade
-```
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
 

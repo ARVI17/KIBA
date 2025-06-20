@@ -10,7 +10,6 @@ from sqlalchemy import func
 from backend.app.config import db
 from backend.app.models.sms import Especialidad, SMS
 from backend.app.models.confirmacion import Confirmacion
-from backend.app.models.user import Usuario  # Si deseas asociar con usuario
 from backend.app.utils.token_manager import token_requerido
 
 logger = logging.getLogger(__name__)
