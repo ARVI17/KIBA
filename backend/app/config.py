@@ -87,7 +87,12 @@ def create_app():
     # Inicializar extensiones y registrar manejadores de error
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+    frontend_url = os.getenv("FRONTEND_URL")
+    if not frontend_url:
+        logger.warning("FRONTEND_URL no establecido, usando '*' para CORS")
+        frontend_url = "*"
+    CORS(app, resources={r"/api/*": {"origins": frontend_url}})
     register_error_handlers(app)
     register_cli(app)
 
