@@ -8,6 +8,7 @@ os.environ.setdefault("JWT_SECRET_KEY", "testsecret")
 os.environ.setdefault("HABLAME_ACCOUNT", "acc")
 os.environ.setdefault("HABLAME_APIKEY", "key")
 os.environ.setdefault("HABLAME_TOKEN", "token")
+os.environ.setdefault("HABLAME_API_KEY", "key")
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -23,6 +24,7 @@ def app():
     os.environ["HABLAME_ACCOUNT"] = "acc"
     os.environ["HABLAME_APIKEY"] = "key"
     os.environ["HABLAME_TOKEN"] = "token"
+    os.environ["HABLAME_API_KEY"] = "key"
     config.SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     app = config.create_app()
     app.config["TESTING"] = True
