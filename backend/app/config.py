@@ -123,6 +123,7 @@ def create_app():
     from backend.app.routes.cita import cita_bp
     from backend.app.routes.sms import sms_bp
     from backend.app.routes.confirmacion import confirmacion_bp
+    from backend.app.routes.health import health_bp
 
     app.register_blueprint(auth, url_prefix="/api")
     app.register_blueprint(specialty_bp, url_prefix="/api")
@@ -130,6 +131,7 @@ def create_app():
     app.register_blueprint(cita_bp, url_prefix="/api")
     app.register_blueprint(sms_bp, url_prefix="/api")
     app.register_blueprint(confirmacion_bp, url_prefix="/api")
+    app.register_blueprint(health_bp, url_prefix="/api")
 
     # Semilla de usuario admin por defecto
     from backend.app.utils.default_user import seed_default_admin
