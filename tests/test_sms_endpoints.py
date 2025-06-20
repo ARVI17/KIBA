@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from backend.app.config import db
 from backend.app.models.sms import SMS
+import respx
+import httpx
 
 
 def seed_sms():
@@ -82,39 +84,31 @@ def test_importar_sms_requires_token(client):
     assert resp.status_code == 401
 
 
-def test_enviar_sms_with_token(client, app, seed_user, monkeypatch):
+def test_enviar_sms_with_token(client, app, seed_user):
     token = get_token(client, seed_user)
 
-    def mock_post(url, headers=None, data=None):
-        class R:
-            status_code = 200
-            text = ""
-
-        return R()
-
-    monkeypatch.setattr("backend.app.routes.sms.requests.post", mock_post)
-    resp = client.post(
-        "/api/enviar-sms",
-        json={"numero": "1", "mensaje": "hi"},
-        headers={"Authorization": token},
-    )
-    assert resp.status_code == 200
+    with respx.mock as router:
+        router.post("https://api103.hablame.co/api/sms/v3/send/marketing/bulk").mock(
+            return_value=httpx.Response(200, json_data={})
+        )
+        resp = client.post(
+            "/api/enviar-sms",
+            json={"numero": "1", "mensaje": "hi"},
+            headers={"Authorization": token},
+        )
+        assert resp.status_code == 200
 
 
-def test_importar_sms_with_token(client, app, seed_user, monkeypatch):
+def test_importar_sms_with_token(client, app, seed_user):
     token = get_token(client, seed_user)
 
-    def mock_post(url, headers=None, data=None):
-        class R:
-            status_code = 200
-            text = ""
-
-        return R()
-
-    monkeypatch.setattr("backend.app.routes.sms.requests.post", mock_post)
-    resp = client.post(
-        "/api/importar-sms",
-        json={"mensajes": [{"numero": "1", "mensaje": "hi"}]},
-        headers={"Authorization": token},
-    )
-    assert resp.status_code == 200
+    with respx.mock as router:
+        router.post("https://api103.hablame.co/api/sms/v3/send/marketing/bulk").mock(
+            return_value=httpx.Response(200, json_data={})
+        )
+        resp = client.post(
+            "/api/importar-sms",
+            json={"mensajes": [{"numero": "1", "mensaje": "hi"}]},
+            headers={"Authorization": token},
+        )
+        assert resp.status_code == 200
