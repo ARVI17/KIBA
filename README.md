@@ -10,12 +10,16 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `FRONTEND_URL` – origen permitido para CORS (si falta se usa `*`).
 - `ADMIN_EMAIL` y `ADMIN_PASS` – datos del administrador inicial.
 - `SENTRY_DSN` – opcional, para reportar errores.
+- `LOG_LEVEL` – opcional, nivel de logging (INFO por defecto).
 
 El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
 ## Base de datos (PostgreSQL por defecto)
 
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos vacía y
 aplique las migraciones iniciales con:
+```bash
+flask --app backend.app.main db upgrade
+```
 
 
 Ajuste `DATABASE_URL` en su `.env` para que apunte a la instancia creada.
@@ -53,12 +57,25 @@ flask --app backend.app.main run
 ```
 
 La API estará disponible en `http://localhost:5000/`.
+## Autenticación
+
+Obten un token mediante la ruta `/api/login` enviando `correo` y `contrasena`.
+Incluye `Authorization: Bearer <token>` en tus peticiones protegidas.
 
 ### Herramientas de desarrollo opcionales
 
 Para análisis estático puedes instalar manualmente `mypy` y `bandit`. Estas
 dependencias no forman parte de `requirements.txt` para mantener liviano el
 entorno de producción.
+
+### Pre-commit
+
+Para ejecutar Black, Flake8 y las herramientas de frontend antes de cada
+commit instala los hooks con:
+
+```bash
+pre-commit install
+```
 
 ## Desarrollo del frontend
 
@@ -71,10 +88,24 @@ npm run dev
 ```
 
 Para generar los artefactos de producción:
-
 ```bash
 npm run build
 ```
+## Pruebas
+
+### Backend
+
+```bash
+pytest
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm test
+```
+
 
 ## Docker
 
