@@ -10,7 +10,7 @@ class Cita(db.Model):
     paciente_id = db.Column(db.Integer, db.ForeignKey('pacientes.id'), nullable=False, index=True)
     especialidad_id = db.Column(db.Integer, db.ForeignKey('especialidades.id'), nullable=False, index=True)
     fecha_hora = db.Column(db.DateTime, nullable=False, index=True)
-    creado_en = db.Column(db.DateTime, default=datetime.utcnow)
+    creado_en = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     # Relaciones
     paciente = db.relationship(
