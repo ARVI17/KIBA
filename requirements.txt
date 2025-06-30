@@ -12,5 +12,3 @@ pytest
 pg8000==1.31.2
 sentry-sdk>=1.39.1
 prometheus-client>=0.20.0
-fastapi
-uvicorn

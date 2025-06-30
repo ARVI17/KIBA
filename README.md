@@ -118,6 +118,9 @@ Puede construir la imagen y levantar todo el entorno con:
 docker-compose up --build
 ```
 
+El servicio de backend se ejecuta con **Gunicorn** usando 4 procesos y
+escuchando en `0.0.0.0:5000`.
+
 ## Uso opcional con MySQL
 
 Si prefieres MySQL puedes utilizar el servicio incluido en XAMPP u otra
