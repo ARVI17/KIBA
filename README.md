@@ -12,8 +12,12 @@ Copie el archivo `.env.example` a `.env` y complete con al menos:
 - `SENTRY_DSN` – opcional, para reportar errores.
 - `LOG_LEVEL` – opcional, nivel de logging (INFO por defecto).
 - `JWT_EXPIRES_HOURS` – opcional, horas de validez del token (1 por defecto).
+- `HABLAME_API_KEY` – clave de Hablame necesaria para el envío de SMS.
 
-El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada. 
+En el archivo `.env.example` encontrarás la variable `HABLAME_API_KEY=`
+que debes reemplazar con tu llave para poder enviar SMS a través de Hablame.
+
+El archivo `.env.example` contiene ejemplos para PostgreSQL y MySQL. Elija una de las URLs y deje la otra comentada.
 ## Base de datos (PostgreSQL por defecto)
 
 Para desarrollo local utilizamos **PostgreSQL**. Cree la base de datos vacía y
