@@ -31,6 +31,13 @@ def test_postgresql_url_usado(monkeypatch):
     assert app.config["SQLALCHEMY_DATABASE_URI"] == url
 
 
+def test_mysql_url_convertido(monkeypatch):
+    url = "mysql://user:pass@localhost/db"
+    setup_env(url)
+    app = config.create_app()
+    assert app.config["SQLALCHEMY_DATABASE_URI"] == "mysql+pymysql://user:pass@localhost/db"
+
+
 def test_log_message_masked(monkeypatch, caplog):
     url = "postgresql://user:pass@localhost/db"
     setup_env(url)
