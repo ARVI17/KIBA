@@ -1,6 +1,6 @@
 import asyncio
 import respx
-import httpx
+import httpx_stub as httpx
 from backend.app.hablame_client import HablameClient
 
 
