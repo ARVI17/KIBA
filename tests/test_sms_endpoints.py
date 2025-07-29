@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from backend.app.config import db
 from backend.app.models.sms import SMS
 import respx
-import httpx
+import httpx_stub as httpx
 
 
 def seed_sms():
