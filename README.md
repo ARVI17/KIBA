@@ -39,7 +39,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 flask --app backend.app.main db upgrade
-python manage.py cargar_datos
+flask --app backend.app.main cargar-datos
 flask --app backend.app.main run
 ```
 
