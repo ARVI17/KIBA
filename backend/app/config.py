@@ -22,8 +22,21 @@ load_dotenv()
 
 # Validar configuración de base de datos
 DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL or not (DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql://")):
-    raise RuntimeError("DATABASE_URL debe definirse y usar el esquema de PostgreSQL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL debe definirse y usar el esquema de PostgreSQL o MySQL"
+    )
+
+_allowed_schemes = (
+    "postgres://",
+    "postgresql://",
+    "mysql://",
+    "mysql+pymysql://",
+)
+if not DATABASE_URL.startswith(_allowed_schemes):
+    raise RuntimeError(
+        "DATABASE_URL debe usar PostgreSQL (postgres:// o postgresql://) o MySQL"
+    )
 
 # Construir URI de SQLAlchemy
 def _build_database_uri(url: str) -> str:
