@@ -120,12 +120,6 @@ npm run build
 pytest
 ```
 
-### Frontend
-
-```bash
-cd frontend
-npm test
-```
 
 
 ## Docker
