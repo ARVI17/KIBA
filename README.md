@@ -43,19 +43,6 @@ flask --app backend.app.main cargar-datos
 flask --app backend.app.main run
 ```
 
-### Instalación con Poetry
-
-Si prefieres utilizar *Poetry* para manejar las dependencias, ejecuta:
-
-```bash
-pip install poetry        # o usa el instalador oficial
-cd backend
-poetry lock               # genera/actualiza poetry.lock
-poetry install            # instala las dependencias
-```
-
-Ten en cuenta que el `Dockerfile` espera los archivos `pyproject.toml` y
-`poetry.lock` dentro de `backend/`.
 
 En otra terminal inicie el frontend:
 
